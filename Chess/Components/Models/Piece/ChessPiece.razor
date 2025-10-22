@@ -1,0 +1,26 @@
+﻿@using Chess.Components.Models;
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="chess-piece"
+     role="img"
+     aria-label="@($"{Piece.Owner} {Piece.Type} on {FileRank}")"
+     draggable="@Draggable"
+     @onclick="HandleClick"
+     @ondragstart="OnDragStart"
+     @ondragend="OnDragEnd">
+    @Piece.UnicodeSymbol
+</div>
+
+@code {
+    [Parameter] public Piece Piece { get; set; } = default!;
+    [Parameter] public bool Draggable { get; set; } = true;
+    [Parameter] public EventCallback<Piece> OnPieceClicked { get; set; }
+    [Parameter] public EventCallback<DragEventArgs> OnPieceDragStart { get; set; }
+    [Parameter] public EventCallback<DragEventArgs> OnPieceDragEnd { get; set; }
+
+    string FileRank => $"{(char)('a' + Piece.File)}{Piece.Rank + 1}";
+
+    Task HandleClick() => OnPieceClicked.InvokeAsync(Piece);
+    Task OnDragStart(DragEventArgs e) => OnPieceDragStart.InvokeAsync(e);
+    Task OnDragEnd(DragEventArgs e) => OnPieceDragEnd.InvokeAsync(e);
+}
