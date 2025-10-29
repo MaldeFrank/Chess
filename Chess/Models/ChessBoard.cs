@@ -1,7 +1,7 @@
 
-namespace BoardInfo
-{
 
+namespace Chess.Models
+{
     public class ChessBoard
     {
         public Dictionary<string, Cell> BoardCells { get; set; } = new();
@@ -17,10 +17,10 @@ namespace BoardInfo
         "h1", "h2", "h3", "h4", "h5", "h6", "h7", "h8"];
         public ChessBoard()
         {
-            Instantiate_cells();
+            InstantiateCells();
         }
 
-        public void Instantiate_cells()
+        public void InstantiateCells()
         {
             for (int i = 0; i < CellIds.Length; i++)
             {
@@ -36,12 +36,51 @@ namespace BoardInfo
 
         }
 
+        public void PlacePiece(Piece piece)
+        {
+            string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
+            if (BoardCells.ContainsKey(cellId))
+            {
+                BoardCells[cellId].Occupant = piece;
+            }
+        }
+
+
         public void SelectField(string selected)
         {
-            if(Selected!=null){Selected.IsSelected = false;}
+            if (Selected != null) { Selected.IsSelected = false; }
             Selected = BoardCells[selected];
             Selected.IsSelected = true;
         }
+
+        public void ValidateBoardCells()
+        {
+            foreach (var kvp in BoardCells)
+            {
+                var cell = kvp.Value;
+                if (cell.Row < 0 || cell.Row > 8 || cell.Col < 0 || cell.Col > 8)
+                    throw new ArgumentOutOfRangeException($"Cell {cell.Id} has invalid row or col");
+            }
+        }
+
+
+        public void ValidatePiecePlacement(Piece piece)
+        {
+            if (piece.File < 0 || piece.File > 7 || piece.Rank < 0 || piece.Rank > 7)
+                throw new ArgumentOutOfRangeException("Piece has invalid File or Rank");
+        }
+
+        public void Validate()
+        {
+            ValidateBoardCells();
+            foreach (var cell in BoardCells.Values)
+            {
+                if (cell.Occupant != null)
+                    ValidatePiecePlacement(cell.Occupant);
+            }
+        }
+
+
 
     }
 }

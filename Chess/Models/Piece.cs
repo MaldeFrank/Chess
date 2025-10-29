@@ -1,16 +1,16 @@
-﻿namespace Chess.Components.Models.Piece
+﻿using System.Collections.Generic;
+
+namespace Chess.Models
 {
-    using System.Collections.Generic;
-    using Chess.Components.Models.Player;
 
     public enum PieceType { Pawn, Knight, Bishop, Rook, Queen, King }
 
     public class Piece
     {
         public PieceType Type { get; set; }
-        public Player Owner { get; set; }    
-        public int File { get; set; }        
-        public int Rank { get; set; }          
+        public Player Owner { get; set; }
+        public int File { get; set; }
+        public int Rank { get; set; }
         public bool IsCaptured { get; set; }
 
         public Piece(PieceType type, Player owner, int file, int rank)
