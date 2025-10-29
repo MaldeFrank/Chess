@@ -1,4 +1,5 @@
-using Chess.Logic.Interfaces;
+
+using Chess.Logic.Abstract;
 using Chess.Models;
 
 namespace Chess.Logic
@@ -12,28 +13,13 @@ namespace Chess.Logic
 
             var moves = new List<(int, int)>();
 
-            // Diagonal opad-højre
-            int r = row + 1;
-            int c = col + 1;
-            while (r <= 8 && c <= 8)
-            {
-                moves.Add((r, c));
-                r++;
-                c++;
-            }
-
-            // Diagonal nedad-venstre
-            r = row - 1;
-            c = col - 1;
-            while (r >= 1 && c >= 1)
-            {
-                moves.Add((r, c));
-                r--;
-                c--;
-            }
+            const int MaxDistance = 7;
+            moves.AddRange(GetMovesUpRight(row, col, MaxDistance));
+            moves.AddRange(GetMovesDownLeft(row, col, MaxDistance));
+            moves.AddRange(GetMovesUpLeft(row, col, MaxDistance));
+            moves.AddRange(GetMovesDownRight(row, col, MaxDistance));
 
             return moves;
-
         }
     }
 }

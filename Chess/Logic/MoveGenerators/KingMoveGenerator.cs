@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Chess.Logic.Interfaces;
+using Chess.Logic.Abstract;
 using Chess.Models;
 
 namespace Chess.Logic

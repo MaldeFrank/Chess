@@ -49,7 +49,6 @@ namespace Chess.Models
             }
         }
 
-
         public void SelectField(string selected)
         {
             //Highligts the selected field

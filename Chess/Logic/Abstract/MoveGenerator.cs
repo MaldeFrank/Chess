@@ -1,8 +1,8 @@
 using Chess.Models;
 
-namespace Chess.Logic.Interfaces
+namespace Chess.Logic.Abstract
 {
-    public abstract class MoveGenerator
+    public abstract class MoveGenerator: BasicMoves
     {
         public List<string> GenerateMoves(Cell cell)
         {
@@ -14,7 +14,7 @@ namespace Chess.Logic.Interfaces
             return ToCellId(baseMoves);
         }
 
-        protected List<string> ToCellId(List<(int, int)> ids)
+        private List<string> ToCellId(List<(int, int)> ids)
         {
             Dictionary<int, string> mappings = new Dictionary<int, string>();
             mappings.Add(1, "a");
@@ -37,6 +37,7 @@ namespace Chess.Logic.Interfaces
 
             return cellIds;
         }
+
 
         protected abstract List<(int, int)> GeneratePieceSpecificMoves(Cell cell);
     }

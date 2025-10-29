@@ -1,5 +1,5 @@
 using Chess.Logic;
-using Chess.Logic.Interfaces;
+using Chess.Logic.Abstract;
 using Chess.Models;
 
 namespace Chess.logic
