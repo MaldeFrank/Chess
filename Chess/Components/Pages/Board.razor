@@ -1,18 +1,22 @@
 @page "/board"
 @rendermode InteractiveServer
-@using BoardInfo
+@using Models
 @using System.Diagnostics
 @using System
 
-<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border-style: solid;">
-    @foreach (KeyValuePair<string, Cell> Kvp in board.BoardCells)
+<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
+    @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
     {
-        <div @onclick="() => board.SelectField(Kvp.Key)" id="@Kvp.Key" style="background-color:@Kvp.Value.Color; height:@Kvp.Value.Height; width:@Kvp.Value.Width; border: @(Kvp.Value.IsSelected ? "3px solid lightblue" : "none"); ">
-          
+        <div @onclick="() => game.Board.SelectField(kvp.Key)"
+             id="@kvp.Key"
+             style="background-color:@kvp.Value.Color; height:@kvp.Value.Height; width:@kvp.Value.Width;
+                            border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                            display:flex; justify-content:center; align-items:center; font-size:48px;">
+            @kvp.Value.Occupant?.UnicodeSymbol
         </div>
     }
 </div>
 
 @code {
-    ChessBoard board = new ChessBoard(); 
+    Chess.Models.Game game = new Chess.Models.Game();
 }
