@@ -60,7 +60,7 @@ namespace Chess.Models
             if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); }
 
             Piece piece = Selected.Occupant;
-            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected);
+            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells);
 
             PossibleMoves.ForEach((id =>
             {
