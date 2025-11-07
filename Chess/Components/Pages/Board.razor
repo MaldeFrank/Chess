@@ -4,32 +4,20 @@
 @using System.Diagnostics
 @using System
 
-<div class="container my-3">
-    <!-- Status -->
-    <div class="alert alert-info text-center">
-        @if (game.Winner != null)
-        {
-            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? "Hvid" : "Sort")</strong>
-        }
-        else
-        {
-            <strong>Tur: @(game.CurrentTurn == Player.White ? "Hvid" : "Sort")</strong>
-        }
-    </div>
-
-
-    <div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
-        @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
-        {
-            <div @onclick="() => game.Board.SelectField(kvp.Key)"
-                 id="@kvp.Key"
-                 style="background-color:@kvp.Value.Color; height:auto width:auto;
-                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                    display:flex; justify-content:center; align-items:center; font-size:48px;">
-                @kvp.Value.Occupant?.UnicodeSymbol
+<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
+    @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
+    {
+        <div @onclick="() => game.Board.SelectField(kvp.Key)" id="@kvp.Key" style="background-color:@kvp.Value.Color; height:@kvp.Value.Height; width:@kvp.Value.Width;
+                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                display:flex; justify-content:center; align-items:center; font-size:48px;
+                                position:relative;">
+            @kvp.Value.Occupant?.UnicodeSymbol
+            <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
+                **@kvp.Key**
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {
