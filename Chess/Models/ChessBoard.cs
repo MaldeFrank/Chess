@@ -1,11 +1,15 @@
 
 
+using Chess.logic;
+
 namespace Chess.Models
 {
     public class ChessBoard
     {
+        public List<string> PossibleMoves = new List<string>();
         public Dictionary<string, Cell> BoardCells { get; set; } = new();
         public Cell? Selected { get; set; }
+
         public string[] CellIds { get; set; } = [
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8",
         "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8",
@@ -45,13 +49,25 @@ namespace Chess.Models
             }
         }
 
-
         public void SelectField(string selected)
         {
+            //Highligts the selected field
             if (Selected != null) { Selected.IsSelected = false; }
             Selected = BoardCells[selected];
             Selected.IsSelected = true;
+
+            //Highligts the possible move choices
+            if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); } // Resets the possible moves
+
+            Piece piece = Selected.Occupant;
+            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
+
+            PossibleMoves.ForEach((id =>
+            {
+                BoardCells[id].IsHighlighted = true;
+            }));
         }
+
 
         public void ValidateBoardCells()
         {
