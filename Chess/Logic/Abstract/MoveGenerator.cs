@@ -22,6 +22,8 @@ namespace Chess.Logic.Abstract
 
             return ChessBoardUtility.ToCellId(baseMoves);
         }
+
+
         private bool Collision(int row, int col, List<(int, int)> occupiedCells)
         {
             (int, int) potentialMove = (row, col);
@@ -32,7 +34,17 @@ namespace Chess.Logic.Abstract
             }
             return false;
         }
-
+        
+        /// <summary>
+        /// Calculates moves in given direction specified by row and column movement.
+        /// </summary>
+        /// <param name="startRow">Starting row of selected cell</param>
+        /// <param name="startCol">Starting column of selected cell</param>
+        /// <param name="maxSteps">Max steps piece can move</param>
+        /// <param name="occupiedCells">All occupied cells</param>
+        /// <param name="rowDirec">Row movement</param>
+        /// <param name="colDirec">Column movement</param>
+        /// <returns>All the cells it can move to e.g. (row,column)</returns>
         protected List<(int row, int col)> GetMovesInDirection(int startRow, int startCol, int maxSteps, List<(int, int)> occupiedCells, int rowDirec, int colDirec)
         {
             var moves = new List<(int, int)>();
