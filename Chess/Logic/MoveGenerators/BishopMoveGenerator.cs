@@ -13,11 +13,16 @@ namespace Chess.Logic
 
             var moves = new List<(int, int)>();
 
-            const int MaxDistance = 7;
-            moves.AddRange(GetMovesUpRight(row, col, MaxDistance, occupiedCells));
-            moves.AddRange(GetMovesDownLeft(row, col, MaxDistance, occupiedCells));
-            moves.AddRange(GetMovesUpLeft(row, col, MaxDistance, occupiedCells));
-            moves.AddRange(GetMovesDownRight(row, col, MaxDistance, occupiedCells));
+            const int maxSteps = 7;
+
+            // 1. Diagonal Up-Right
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, +1));
+            // 2. Diagonal Down-Left
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, -1));
+            // 3. Diagonal Up-Left
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, -1));
+            // 4. Diagonal Down-Right
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, +1));
 
             return moves;
         }
