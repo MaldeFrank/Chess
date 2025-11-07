@@ -7,7 +7,19 @@ namespace Chess.Logic
     {
         protected override List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells)
         {
-            throw new NotImplementedException();
+            int col = cell.Col; // 1–8
+            int row = cell.Row; // 1–8
+
+            var moves = new List<(int, int)>();
+
+            const int maxSteps = 8;
+            //straight
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, 0));
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, 0));
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, +1));
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, -1));
+
+            return moves;
         }
     }
 }
