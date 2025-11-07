@@ -1,11 +1,11 @@
-﻿
-
-namespace Chess.Models
+﻿namespace Chess.Models
 {
     public class Game
     {
         public ChessBoard Board { get; set; } = new ChessBoard();
         public List<Piece> Pieces { get; set; } = new List<Piece>();
+        public Player CurrentTurn { get; set; } = Player.White; // Starter med White
+        public Player? Winner { get; set; } = null;
 
         public Game()
         {
@@ -52,42 +52,19 @@ namespace Chess.Models
             }
         }
 
-        public void ValidatePieces()
+        public void NextTurn()
         {
-            var occupied = new HashSet<string>();
-
-            foreach (var piece in Pieces)
-            {
-                piece.ValidatePosition();
-
-                string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
-
-                if (occupied.Contains(cellId))
-                    throw new InvalidOperationException($"Duplicate piece on cell {cellId}");
-
-                occupied.Add(cellId);
-
-                if (!Board.BoardCells.ContainsKey(cellId))
-                    throw new InvalidOperationException($"Piece {piece.Type} at {cellId} is outside the board");
-            }
+            if (Winner != null) return; // Spillet er slut
+            CurrentTurn = CurrentTurn == Player.White ? Player.Black : Player.White;
         }
 
-        public void ValidateBoardPlacement()
+        public void CheckWinner()
         {
-            foreach (var piece in Pieces)
-            {
-                string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
-                var cell = Board.BoardCells[cellId];
+            var whiteKingAlive = Pieces.Any(p => p.Type == PieceType.King && p.Owner == Player.White && !p.IsCaptured);
+            var blackKingAlive = Pieces.Any(p => p.Type == PieceType.King && p.Owner == Player.Black && !p.IsCaptured);
 
-                if (cell.Occupant != piece)
-                    throw new InvalidOperationException($"Piece {piece.Type} not correctly placed on board at {cellId}");
-            }
-        }
-
-        public void Validate()
-        {
-            ValidatePieces();
-            ValidateBoardPlacement();
+            if (!whiteKingAlive) Winner = Player.Black;
+            if (!blackKingAlive) Winner = Player.White;
         }
     }
 }
