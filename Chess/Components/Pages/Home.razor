@@ -2,6 +2,68 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to The Ultimate Chess Game!</h1>
 
-Welcome to your new app.
+<div class="player-setup">
+    <h2>Player 1</h2>
+    <p>Please enter the name of player 1:</p>
+    <input type="text" @bind="Player1Name" placeholder="Player 1 name" />
+
+    <p>Please select the color for player 1:</p>
+    <select @bind="Player1Color">
+        <option value="white">White</option>
+        <option value="lightcoral">Light coral</option>
+        <option value="lightblue">Light blue</option>
+        <option value="lightgreen">Light green</option>
+    </select>
+</div>
+
+<br>
+
+<div class="player-setup">
+    <h2>Player 2</h2>
+    <p>Please enter the name of player 2:</p>
+    <input type="text" @bind="Player2Name" placeholder="Player 2 name" />
+</div>
+
+<br>
+
+<button @onclick="StartGame">Start Game</button>
+
+@if (ErrorMessage is not null)
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+@if (GameStarted)
+{
+    <p>Starting game between <strong>@Player1Name</strong> and <strong>@Player2Name</strong>!</p>
+    <p>Player 1 color: <span style="color:@Player1Color">@Player1Color</span></p>
+
+    <!-- You could render your chess board component here -->
+    <!-- <ChessBoard Player1Color="@Player1Color" /> -->
+}
+
+@code {
+    private string Player1Name { get; set; } = string.Empty;
+    private string Player2Name { get; set; } = string.Empty;
+    private string Player1Color { get; set; } = "white";
+    private string? ErrorMessage { get; set; }
+    private bool GameStarted { get; set; } = false;
+
+    private void StartGame()
+    {
+        if (string.IsNullOrWhiteSpace(Player1Name) || string.IsNullOrWhiteSpace(Player2Name))
+        {
+            ErrorMessage = "Please enter names for both players.";
+            GameStarted = false;
+            return;
+        }
+
+        ErrorMessage = null;
+        GameStarted = true;
+
+        // TODO: Navigate to the actual chess game page or initialize game state.
+        Console.WriteLine($"Starting game: {Player1Name} vs {Player2Name} ({Player1Color})");
+    }
+}

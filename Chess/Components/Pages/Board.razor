@@ -4,7 +4,7 @@
 @using System.Diagnostics
 @using System
 
-<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
+<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
     @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
     {
         <div @onclick="() => game.Board.SelectField(kvp.Key)"
