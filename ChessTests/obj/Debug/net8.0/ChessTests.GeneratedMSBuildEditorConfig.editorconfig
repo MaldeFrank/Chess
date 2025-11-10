@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ChessTests
-build_property.ProjectDir = /Users/louise/Desktop/C-sharp/Chess/ChessTests/
+build_property.ProjectDir = /Users/louise/csharp-chess/project/Chess/ChessTests/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
