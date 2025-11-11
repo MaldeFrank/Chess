@@ -4,6 +4,8 @@
     {
         public ChessBoard Board { get; set; } = new ChessBoard();
         public List<Piece> Pieces { get; set; } = new List<Piece>();
+        public ChessPlayer Player1 { get; set; } = new ChessPlayer();
+        public ChessPlayer Player2 { get; set; } = new ChessPlayer();
         public Player CurrentTurn { get; set; } = Player.White; // Starter med White
         public Player? Winner { get; set; } = null;
 

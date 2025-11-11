@@ -1,8 +1,12 @@
 @page "/board"
 @rendermode InteractiveServer
-@using Models
+@using Pages
 @using System.Diagnostics
 @using System
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
+
+<button @onclick="Test">Start Test</button>
 
 <div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
     @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
@@ -12,16 +16,46 @@
                                 background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
                                 display:flex; justify-content:center; align-items:center; font-size:48px;
                                 position:relative;">
-            @kvp.Value.Occupant?.UnicodeSymbol
+
+            @if (kvp.Value.Occupant != null)
+            {
+                var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
+                <span style="color:@color; font-size:3rem; text-shadow: 1px 1px 2px gray;">
+                    @kvp.Value.Occupant.UnicodeSymbol
+                </span>
+            }
             <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
                 **@kvp.Key**
             </div>
         </div>
     }
+
 </div>
 
+
+
 @code {
+
+    public void Test()
+    {
+        Console.WriteLine("Test button clicked!");
+    }
+
+
+    [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
+    [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";
+    [Parameter, SupplyParameterFromQuery] public string Player2Name { get; set; } = "Player 2";
+    [Parameter, SupplyParameterFromQuery] public string Player2Color { get; set; } = "black";
+
     Chess.Models.Game game = new Chess.Models.Game();
+
+        protected override void OnParametersSet()
+    {
+        game.Player1.Name = Player1Name;
+        game.Player1.Color = Player1Color;
+        game.Player2.Name = Player2Name;
+        game.Player2.Color = Player2Color;
+    }
 
     private void OnCellClick(string cellId)
     {

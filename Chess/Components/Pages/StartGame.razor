@@ -1,4 +1,5 @@
-﻿@page "/"
+@page "/startGame"
+@rendermode InteractiveServer
 @inject NavigationManager Navigation
 @using Pages
 @using System.Diagnostics
@@ -35,7 +36,7 @@
     <p>Please select the color for player 2:</p>
     <select @bind="player2.Color">
         <option value="black">Black</option>
-        <option value="burgundy">Burgundy</option>
+        <option value="maroon">Maroon</option>
         <option value="darkblue">Dark blue</option>
         <option value="darkgreen">Dark green</option>
     </select>
@@ -43,7 +44,7 @@
 
 <br>
 
-<button @onclick="StartGame">Start Game</button>
+<button @onclick="BeginGame">Start Game</button>
 
 @if (ErrorMessage is not null)
 {
@@ -73,7 +74,7 @@
     private string? ErrorMessage { get; set; }
     private bool GameStarted { get; set; } = false;
 
-    private void StartGame()
+    private void BeginGame()
     {
         Console.WriteLine("StartGame clicked!");
         if (string.IsNullOrWhiteSpace(player1.Name) || string.IsNullOrWhiteSpace(player2.Name))
