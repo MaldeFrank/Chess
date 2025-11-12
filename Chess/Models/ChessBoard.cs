@@ -58,14 +58,19 @@ namespace Chess.Models
 
             //Highligts the possible move choices
             if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); } // Resets the possible moves
+            Piece? piece = null;
 
-            Piece piece = Selected.Occupant;
-            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
-
-            PossibleMoves.ForEach((id =>
+            if (Selected.Occupant != null)
             {
-                BoardCells[id].IsHighlighted = true;
-            }));
+                piece = Selected.Occupant;
+                PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
+
+                PossibleMoves.ForEach((id =>
+                {
+                    BoardCells[id].IsHighlighted = true;
+                }));
+            };
+
         }
 
 

@@ -7,8 +7,8 @@ namespace Chess.Models
     {
         public string Id { get; set; }
         public Piece? Occupant { get; set; }
-        //public string Width { get; } = "150px";
-        //public string Height { get; } = "150px";
+        public string Width { get; } = "150px";
+        public string Height { get; } = "150px";
         public int Row { get; set; }
         public int Col { get; set; }
         public Boolean IsSelected { get; set; }

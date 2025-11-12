@@ -54,11 +54,11 @@ namespace Chess.Logic.Abstract
 
             while (r >= 1 && r <= 8 && c >= 1 && c <= 8 && steps < maxSteps)
             {
+                moves.Add((r, c));
                 if (Collision(r, c, occupiedCells))
                 {
                     break;
                 }
-                moves.Add((r, c));
 
                 r += rowDirec;
                 c += colDirec;
