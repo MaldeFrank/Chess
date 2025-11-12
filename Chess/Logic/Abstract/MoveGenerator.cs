@@ -27,7 +27,7 @@ namespace Chess.Logic.Abstract
         private bool Collision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
         {
             (int, int) potentialMove = (row, col);
-
+            
             if (occupiedCells.Contains(potentialMove))
             {
                 List<string> move = ChessBoardUtility.ToCellId([potentialMove]);

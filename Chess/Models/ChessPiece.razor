@@ -1,7 +1,10 @@
 ﻿@using Chess.Models;
-@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web;
 
-<div class="chess-piece"
+
+
+
+<div class="chess-piece @(Piece.Owner == Player.White ? "white-piece" : "black-piece")"
      role="img"
      aria-label="@($"{Piece.Owner} {Piece.Type} on {FileRank}")"
      draggable="@Draggable"
