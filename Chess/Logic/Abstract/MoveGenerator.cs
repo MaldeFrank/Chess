@@ -24,7 +24,7 @@ namespace Chess.Logic.Abstract
         }
 
 
-        private bool Collision(int row, int col, List<(int, int)> occupiedCells)
+        protected bool Collision(int row, int col, List<(int, int)> occupiedCells)
         {
             (int, int) potentialMove = (row, col);
 

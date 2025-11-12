@@ -51,21 +51,21 @@ namespace Chess.Models
 
         public void SelectField(string selected)
         {
-            //Highligts the selected field
-            if (Selected != null) { Selected.IsSelected = false; }
+            if (Selected != null) Selected.IsSelected = false;
+
             Selected = BoardCells[selected];
             Selected.IsSelected = true;
 
-            //Highligts the possible move choices
-            if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); } // Resets the possible moves
+            if (PossibleMoves.Count > 0)
+                PossibleMoves.ForEach(id => BoardCells[id].IsHighlighted = false);
 
             Piece piece = Selected.Occupant;
-            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
-
-            PossibleMoves.ForEach((id =>
+            if (piece != null)
             {
-                BoardCells[id].IsHighlighted = true;
-            }));
+                PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells);
+                PossibleMoves.ForEach(id => BoardCells[id].IsHighlighted = true);
+            }
+
         }
 
 
