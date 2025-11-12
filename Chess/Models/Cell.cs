@@ -1,4 +1,5 @@
 
+
 namespace Chess.Models
 {
 
@@ -11,7 +12,7 @@ namespace Chess.Models
         public int Row { get; set; }
         public int Col { get; set; }
         public Boolean IsSelected { get; set; }
-        public Boolean IsHighlighted {get; set;}
+        public Boolean IsHighlighted { get; set; }
         public string Color { get; set; }
 
         public Cell(string id, string color, int col, int row)

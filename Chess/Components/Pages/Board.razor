@@ -19,24 +19,56 @@
 
 
     <!-- Brættet -->
-    <div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
+    <div id="chessboard"
+         style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)"
                  id="@kvp.Key"
-                 style="background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                height:150px; width:150px;
-                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                display:flex; justify-content:center; align-items:center; font-size:48px;
-                                position:relative;">
-                @kvp.Value.Occupant?.UnicodeSymbol
+                 style="
+                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                        height:@kvp.Value.Height;
+                        width:@kvp.Value.Width;
+                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        font-size:48px;
+                        position:relative;">
+
+                @if (kvp.Value.Occupant != null)
+                {
+                    var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
+                    <span style="color:@color; font-size:4rem; text-shadow:0px 0px 2px gray;">
+                        @kvp.Value.Occupant.UnicodeSymbol
+                    </span>
+                }
+
+                <!-- Feltets koordinat -->
+                <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
+                    @kvp.Key
+                </div>
             </div>
         }
     </div>
+
 </div>
 
 @code {
+    [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
+    [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";
+    [Parameter, SupplyParameterFromQuery] public string Player2Name { get; set; } = "Player 2";
+    [Parameter, SupplyParameterFromQuery] public string Player2Color { get; set; } = "black";
+
     Chess.Models.Game game = new Chess.Models.Game();
+
+    protected override void OnParametersSet()
+    {
+        game.Player1.Name = Player1Name;
+        game.Player1.Color = Player1Color;
+        game.Player2.Name = Player2Name;
+        game.Player2.Color = Player2Color;
+    }
 
     private void OnCellClick(string cellId)
     {
