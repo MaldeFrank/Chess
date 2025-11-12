@@ -79,7 +79,7 @@ namespace Chess.Logic.Abstract
         /// <param name="cell">The starting cell containing the piece whose moves are being generated.</param>
         /// <param name="occupiedCells">A list of all currently occupied coordinates on the board.</param>
         /// <returns>A list of (row, column) coordinates representing all valid cells the piece can move to.</returns>
-        protected abstract List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells,Dictionary<string, Cell> cellIds);
+        protected abstract List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds);
     }
 
 }

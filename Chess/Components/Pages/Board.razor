@@ -1,39 +1,63 @@
 @page "/board"
 @rendermode InteractiveServer
-@using Pages
+@using Models
 @using System.Diagnostics
 @using System
 @using Microsoft.AspNetCore.Components
 @using Chess.Models
 
-<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
-    @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
-    {
-        <div @onclick="() => game.Board.SelectField(kvp.Key)" id="@kvp.Key" style="background-color:@kvp.Value.Color; height:@kvp.Value.Height; width:@kvp.Value.Width;
-                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                display:flex; justify-content:center; align-items:center; font-size:48px;
-                                position:relative;">
 
-            @if (kvp.Value.Occupant != null)
-            {
-                var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
-                <span style="color:@color; font-size: 4rem; text-shadow: 0px 0px 2px gray;">
-                    @kvp.Value.Occupant.UnicodeSymbol
-                </span>
-            }
-            <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
-                **@kvp.Key**
+<div class="container my-3">
+    <!-- Status -->
+    <div class="alert alert-info text-center">
+        @if (game.Winner != null)
+        {
+            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? "Hvid" : "Sort")</strong>
+        }
+        else
+        {
+            <strong>Tur: @(game.CurrentTurn == Player.White ? "Hvid" : "Sort")</strong>
+        }
+    </div>
+
+
+    <!-- Brættet -->
+    <div id="chessboard"
+         style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
+        @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
+        {
+            <div @onclick="() => OnCellClick(kvp.Key)"
+                 id="@kvp.Key"
+                 style="
+                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                        height:@kvp.Value.Height;
+                        width:@kvp.Value.Width;
+                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        font-size:48px;
+                        position:relative;">
+
+                @if (kvp.Value.Occupant != null)
+                {
+                    var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
+                    <span style="color:@color; font-size:4rem; text-shadow:0px 0px 2px gray;">
+                        @kvp.Value.Occupant.UnicodeSymbol
+                    </span>
+                }
+
+                <!-- Feltets koordinat -->
+                <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
+                    @kvp.Key
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 
 </div>
 
-
-
 @code {
-
     [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
     [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";
     [Parameter, SupplyParameterFromQuery] public string Player2Name { get; set; } = "Player 2";
@@ -41,7 +65,7 @@
 
     Chess.Models.Game game = new Chess.Models.Game();
 
-        protected override void OnParametersSet()
+    protected override void OnParametersSet()
     {
         game.Player1.Name = Player1Name;
         game.Player1.Color = Player1Color;
@@ -53,27 +77,35 @@
     {
         var cell = game.Board.BoardCells[cellId];
 
-        if (cell.Occupant != null && cell.Occupant.Owner == game.CurrentTurn)
-        {
-            game.Board.SelectField(cellId);
-        }
-        else if (game.Board.Selected != null)
+        if (cell.IsHighlighted && game.Board.Selected != null)
         {
             var selectedPiece = game.Board.Selected.Occupant;
             if (selectedPiece != null)
             {
+                // Flyt brik
                 cell.Occupant = selectedPiece;
                 game.Board.Selected.Occupant = null;
 
                 selectedPiece.File = cell.Col;
                 selectedPiece.Rank = cell.Row;
 
+                // Fjern highlight og selection
                 game.Board.Selected.IsSelected = false;
                 game.Board.Selected = null;
+                game.Board.PossibleMoves.ForEach(id => game.Board.BoardCells[id].IsHighlighted = false);
+                game.Board.PossibleMoves.Clear();
 
                 game.CheckWinner();
                 game.NextTurn();
+
+                StateHasChanged(); // opdater UI
             }
+        }
+        // Hvis cellen har brik af nuværende spiller, vælg den
+        else if (cell.Occupant != null && cell.Occupant.Owner == game.CurrentTurn)
+        {
+            game.Board.SelectField(cellId);
+            StateHasChanged(); // opdater selection/highlights
         }
     }
 }

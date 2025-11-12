@@ -69,7 +69,8 @@ namespace Chess.Models
                 {
                     BoardCells[id].IsHighlighted = true;
                 }));
-            };
+            }
+            ;
 
         }
 

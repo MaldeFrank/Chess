@@ -5,6 +5,12 @@
 @using System
 @using Microsoft.AspNetCore.Components
 
+@inject NavigationManager Navigation
+@using Pages
+@using System.Diagnostics
+@using System
+@using Microsoft.AspNetCore.Components
+
 
 
 <PageTitle>Home</PageTitle>
@@ -17,7 +23,7 @@
     <input type="text" @bind="player1.Name" placeholder="Player 1 name" />
 
     <p>Please select the color for player 1:</p>
-    <select @bind="player1.Color" >
+    <select @bind="player1.Color">
         <option value="red">White</option>
         <option value="lightcoral">Light coral</option>
         <option value="lightblue">Light blue</option>
@@ -94,7 +100,7 @@
         Console.WriteLine(url);
         Navigation.NavigateTo(url);
 
-        
+
 
     }
 

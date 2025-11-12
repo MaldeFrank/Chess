@@ -5,7 +5,7 @@ namespace Chess.Logic
 {
     public class RookMoveGenerator : MoveGenerator
     {
-        protected override List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells,Dictionary<string, Cell> cellIds)
+        protected override List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds)
         {
             int col = cell.Col; // 1–8
             int row = cell.Row; // 1–8

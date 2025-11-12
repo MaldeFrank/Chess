@@ -1,31 +1,39 @@
 {
   "format": 1,
   "restore": {
-    "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj": {}
+    "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj": {}
   },
   "projects": {
-    "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj": {
+    "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj",
-        "projectName": "Chess",
-        "projectPath": "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj",
-        "packagesPath": "/Users/louise/.nuget/packages/",
-        "outputPath": "/Users/louise/csharp-chess/project/Chess/Chess/obj/",
+        "projectUniqueName": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj",
+        "projectName": "ChessTests",
+        "projectPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj",
+        "packagesPath": "C:\\Users\\ohsab\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/louise/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\ohsab\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj": {
+                "projectPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -42,6 +50,28 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "MSTest": {
+              "target": "Package",
+              "version": "[3.6.4, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.12.0, )"
+            },
+            "Selenium.Support": {
+              "target": "Package",
+              "version": "[4.38.0, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.38.0, )"
+            },
+            "Selenium.WebDriver.ChromeDriver": {
+              "target": "Package",
+              "version": "[142.0.7444.16200, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -61,26 +91,30 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj": {
+    "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
-        "projectName": "ChessTests",
-        "projectPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
-        "packagesPath": "/Users/louise/.nuget/packages/",
-        "outputPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/obj/",
+        "projectUniqueName": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj",
+        "projectName": "Chess",
+        "projectPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj",
+        "packagesPath": "C:\\Users\\ohsab\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/louise/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\ohsab\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -133,7 +167,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

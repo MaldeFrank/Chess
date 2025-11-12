@@ -1,4 +1,4 @@
-@page "/startGame"
+﻿@page "/startGame"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @using Pages
@@ -18,7 +18,7 @@
     <input type="text" @bind="player1.Name" placeholder="Player 1 name" />
 
     <p>Please select the color for player 1:</p>
-    <select @bind="player1.Color" >
+    <select @bind="player1.Color">
         <option value="white">White</option>
         <option value="lightcoral">Light coral</option>
         <option value="lightblue">Light blue</option>

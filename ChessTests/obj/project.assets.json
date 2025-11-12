@@ -659,6 +659,58 @@
           }
         }
       },
+      "Selenium.Support/4.38.0": {
+        "type": "package",
+        "dependencies": {
+          "Selenium.WebDriver": "4.38.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/WebDriver.Support.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/WebDriver.Support.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Selenium.WebDriver/4.38.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/WebDriver.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/WebDriver.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/Selenium.WebDriver.targets": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux/native/selenium-manager": {
+            "assetType": "native",
+            "rid": "linux"
+          },
+          "runtimes/osx/native/selenium-manager": {
+            "assetType": "native",
+            "rid": "osx"
+          },
+          "runtimes/win/native/selenium-manager.exe": {
+            "assetType": "native",
+            "rid": "win"
+          }
+        }
+      },
+      "Selenium.WebDriver.ChromeDriver/142.0.7444.16200": {
+        "type": "package",
+        "build": {
+          "build/Selenium.WebDriver.ChromeDriver.targets": {}
+        }
+      },
       "System.Diagnostics.DiagnosticSource/5.0.0": {
         "type": "package",
         "compile": {
@@ -1608,6 +1660,66 @@
         "packageIcon.png"
       ]
     },
+    "Selenium.Support/4.38.0": {
+      "sha512": "FBxJRTpXZePi/gbBAf7RzN147sd6vo/TEaxQzxd7NbSxJCbTI2zu0wLmwnv3mmJAWrFDwjknJq0mB6s0b94jIA==",
+      "type": "package",
+      "path": "selenium.support/4.38.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.0/WebDriver.Support.dll",
+        "lib/netstandard2.0/WebDriver.Support.xml",
+        "selenium.support.4.38.0.nupkg.sha512",
+        "selenium.support.nuspec"
+      ]
+    },
+    "Selenium.WebDriver/4.38.0": {
+      "sha512": "3cYBndxLgPifEttQ1+k+KhKp2XBTdME3pUp4PC/eHb/hvHsefeT2WN2JJymzs+5mkqaXUp64FBnj2EG/Iyrh/A==",
+      "type": "package",
+      "path": "selenium.webdriver/4.38.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "build/Selenium.WebDriver.targets",
+        "buildTransitive/Selenium.WebDriver.targets",
+        "icon.png",
+        "lib/net8.0/WebDriver.dll",
+        "lib/net8.0/WebDriver.xml",
+        "lib/netstandard2.0/WebDriver.dll",
+        "lib/netstandard2.0/WebDriver.xml",
+        "runtimes/linux/native/selenium-manager",
+        "runtimes/osx/native/selenium-manager",
+        "runtimes/win/native/selenium-manager.exe",
+        "selenium.webdriver.4.38.0.nupkg.sha512",
+        "selenium.webdriver.nuspec"
+      ]
+    },
+    "Selenium.WebDriver.ChromeDriver/142.0.7444.16200": {
+      "sha512": "syVoOpadE87nsOhhpYy7sBQFEWCWZe4RCGZ14snE/Il6VLpE6GibiYTkOvkXlaSIoGZ8PwdEKF2Ex+bHulUF+g==",
+      "type": "package",
+      "path": "selenium.webdriver.chromedriver/142.0.7444.16200",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "build/DefinePropertiesChromeDriver.targets",
+        "build/Selenium.WebDriver.ChromeDriver.targets",
+        "driver/linux64/LICENSE.chromedriver",
+        "driver/linux64/chromedriver",
+        "driver/mac64/LICENSE.chromedriver",
+        "driver/mac64/chromedriver",
+        "driver/mac64arm/LICENSE.chromedriver",
+        "driver/mac64arm/chromedriver",
+        "driver/win32/LICENSE.chromedriver",
+        "driver/win32/chromedriver.exe",
+        "nupkg-icon.png",
+        "selenium.webdriver.chromedriver.142.0.7444.16200.nupkg.sha512",
+        "selenium.webdriver.chromedriver.nuspec"
+      ]
+    },
     "System.Diagnostics.DiagnosticSource/5.0.0": {
       "sha512": "tCQTzPsGZh/A9LhhA6zrqCRV4hOHsK90/G7q3Khxmn6tnB1PuNU0cRaKANP2AWcF9bn0zsuOoZOSrHuJk6oNBA==",
       "type": "package",
@@ -1667,36 +1779,44 @@
     "net8.0": [
       "Chess >= 1.0.0",
       "MSTest >= 3.6.4",
-      "Microsoft.NET.Test.Sdk >= 17.12.0"
+      "Microsoft.NET.Test.Sdk >= 17.12.0",
+      "Selenium.Support >= 4.38.0",
+      "Selenium.WebDriver >= 4.38.0",
+      "Selenium.WebDriver.ChromeDriver >= 142.0.7444.16200"
     ]
   },
   "packageFolders": {
-    "/Users/louise/.nuget/packages/": {}
+    "C:\\Users\\ohsab\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
+      "projectUniqueName": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj",
       "projectName": "ChessTests",
-      "projectPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
-      "packagesPath": "/Users/louise/.nuget/packages/",
-      "outputPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/obj/",
+      "projectPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj",
+      "packagesPath": "C:\\Users\\ohsab\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/louise/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ohsab\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj": {
-              "projectPath": "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj"
+            "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj": {
+              "projectPath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\Chess\\Chess.csproj"
             }
           }
         }
@@ -1723,6 +1843,18 @@
           "Microsoft.NET.Test.Sdk": {
             "target": "Package",
             "version": "[17.12.0, )"
+          },
+          "Selenium.Support": {
+            "target": "Package",
+            "version": "[4.38.0, )"
+          },
+          "Selenium.WebDriver": {
+            "target": "Package",
+            "version": "[4.38.0, )"
+          },
+          "Selenium.WebDriver.ChromeDriver": {
+            "target": "Package",
+            "version": "[142.0.7444.16200, )"
           }
         },
         "imports": [
@@ -1741,7 +1873,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
