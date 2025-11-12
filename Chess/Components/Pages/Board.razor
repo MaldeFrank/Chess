@@ -4,9 +4,7 @@
 @using System.Diagnostics
 @using System
 @using Microsoft.AspNetCore.Components
-@inject NavigationManager Navigation
-
-<button @onclick="Test">Start Test</button>
+@using Chess.Models
 
 <div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
     @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
@@ -20,7 +18,7 @@
             @if (kvp.Value.Occupant != null)
             {
                 var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
-                <span style="color:@color; font-size:3rem; text-shadow: 1px 1px 2px gray;">
+                <span style="color:@color; font-size: 4rem; text-shadow: 0px 0px 2px gray;">
                     @kvp.Value.Occupant.UnicodeSymbol
                 </span>
             }
@@ -35,12 +33,6 @@
 
 
 @code {
-
-    public void Test()
-    {
-        Console.WriteLine("Test button clicked!");
-    }
-
 
     [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
     [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";

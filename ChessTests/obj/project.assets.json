@@ -1676,11 +1676,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/louise/Desktop/C-sharp/Chess/ChessTests/ChessTests.csproj",
+      "projectUniqueName": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
       "projectName": "ChessTests",
-      "projectPath": "/Users/louise/Desktop/C-sharp/Chess/ChessTests/ChessTests.csproj",
+      "projectPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
       "packagesPath": "/Users/louise/.nuget/packages/",
-      "outputPath": "/Users/louise/Desktop/C-sharp/Chess/ChessTests/obj/",
+      "outputPath": "/Users/louise/csharp-chess/project/Chess/ChessTests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/louise/.nuget/NuGet/NuGet.Config"
@@ -1695,8 +1695,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/louise/Desktop/C-sharp/Chess/Chess/Chess.csproj": {
-              "projectPath": "/Users/louise/Desktop/C-sharp/Chess/Chess/Chess.csproj"
+            "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj": {
+              "projectPath": "/Users/louise/csharp-chess/project/Chess/Chess/Chess.csproj"
             }
           }
         }

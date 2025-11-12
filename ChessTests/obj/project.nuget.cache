@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "oXaoDyHUqfQ=",
+  "dgSpecHash": "eHRVVt3sils=",
   "success": true,
-  "projectFilePath": "/Users/louise/Desktop/C-sharp/Chess/ChessTests/ChessTests.csproj",
+  "projectFilePath": "/Users/louise/csharp-chess/project/Chess/ChessTests/ChessTests.csproj",
   "expectedPackageFiles": [
     "/Users/louise/.nuget/packages/microsoft.applicationinsights/2.22.0/microsoft.applicationinsights.2.22.0.nupkg.sha512",
     "/Users/louise/.nuget/packages/microsoft.codecoverage/17.12.0/microsoft.codecoverage.17.12.0.nupkg.sha512",

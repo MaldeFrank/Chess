@@ -19,7 +19,7 @@
 
     <p>Please select the color for player 1:</p>
     <select @bind="player1.Color" >
-        <option value="red">red</option>
+        <option value="white">White</option>
         <option value="lightcoral">Light coral</option>
         <option value="lightblue">Light blue</option>
         <option value="lightgreen">Light green</option>
@@ -35,7 +35,7 @@
 
     <p>Please select the color for player 2:</p>
     <select @bind="player2.Color">
-        <option value="black">Black</option>
+        <option selected="selected" value="black">Black</option>
         <option value="maroon">Maroon</option>
         <option value="darkblue">Dark blue</option>
         <option value="darkgreen">Dark green</option>
@@ -51,32 +51,21 @@
     <p style="color:red">@ErrorMessage</p>
 }
 
-@if (GameStarted)
-{
-    <p>Starting game between <strong>@player1.Name</strong> and <strong>@player2.Name</strong>!</p>
-    <p>Player 1 color: <span style="color:@player1.Color">@player1.Color</span></p>
-    <p>Player 2 color: <span style="color:@player2.Color">@player2.Color</span></p>
-
-
-}
-
 @code {
 
     Chess.Models.ChessPlayer player1 = new Chess.Models.ChessPlayer();
-
     Chess.Models.ChessPlayer player2 = new Chess.Models.ChessPlayer();
 
-    private void Player1ColorChanged(ChangeEventArgs e)
+    protected override void OnInitialized()
     {
-        player1.Color = e.Value?.ToString() ?? "white";
-
+        player1.Color = "white";
+        player2.Color = "black";
     }
     private string? ErrorMessage { get; set; }
     private bool GameStarted { get; set; } = false;
 
     private void BeginGame()
     {
-        Console.WriteLine("StartGame clicked!");
         if (string.IsNullOrWhiteSpace(player1.Name) || string.IsNullOrWhiteSpace(player2.Name))
         {
             ErrorMessage = "Please enter names for both players.";
@@ -92,12 +81,7 @@
         var url = $"/board?player1Name={Uri.EscapeDataString(player1.Name)}&player1Color={Uri.EscapeDataString(player1.Color)}" +
                 $"&player2Name={Uri.EscapeDataString(player2.Name)}&player2Color={Uri.EscapeDataString(player2.Color)}";
 
-        Console.WriteLine(url);
         Navigation.NavigateTo(url);
 
-        
-
     }
-
-
 }
