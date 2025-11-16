@@ -28,7 +28,9 @@ namespace Chess.Logic
                 .GetResults());
 
                 //Straight
-                moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, +1, cell, cellIds).GetResults());
+                moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, +1, cell, cellIds)
+                .HandleCollision((m, collision) =>{if(collision) m.RemoveAt(m.Count-1);})
+                .GetResults());
             }
             else
             {
@@ -42,7 +44,9 @@ namespace Chess.Logic
                 .GetResults());
 
                 //Straight
-                moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, -1, cell, cellIds).GetResults());
+                moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, -1, cell, cellIds)
+                .HandleCollision((m, collision) =>{if(collision) m.RemoveAt(m.Count-1);})
+                .GetResults());
             }
 
 
