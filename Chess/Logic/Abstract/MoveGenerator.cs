@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using Chess.Models;
 
 
@@ -5,7 +6,7 @@ namespace Chess.Logic.Abstract
 {
     public abstract class MoveGenerator
     {
-        
+
         public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
         {
             return Generate(cell, cellIds);
@@ -28,7 +29,17 @@ namespace Chess.Logic.Abstract
 
             return ChessBoardUtility.ToCellId(baseMoves);
         }
-        
+
+        protected virtual void HandleCollision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
+        {
+            (int, int) potentialMove = (row, col);
+
+            List<string> move = ChessBoardUtility.ToCellId([potentialMove]);
+            if (cellIds[move[0]]?.Occupant?.Owner != cell?.Occupant?.Owner)
+            {
+                moves.Add(potentialMove);
+            }
+        }
 
         protected bool Collision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
         {
@@ -36,11 +47,6 @@ namespace Chess.Logic.Abstract
 
             if (occupiedCells.Contains(potentialMove))
             {
-                List<string> move = ChessBoardUtility.ToCellId([potentialMove]);
-                if (cellIds[move[0]]?.Occupant?.Owner != cell?.Occupant?.Owner)
-                {
-                    moves.Add(potentialMove);
-                }
                 return true;
             }
             return false;
@@ -55,27 +61,31 @@ namespace Chess.Logic.Abstract
         /// <param name="occupiedCells">All occupied cells</param>
         /// <param name="rowDirec">Row movement</param>
         /// <param name="colDirec">Column movement</param>
-        /// <returns>All the cells it can move to e.g. (row,column)</returns>
-        protected List<(int row, int col)> GetMovesInDirection(int startRow, int startCol, int maxSteps, List<(int, int)> occupiedCells, int rowDirec, int colDirec, Cell cell, Dictionary<string, Cell> cellIds)
+        /// <returns> A DirectionBuilder (row,column)</returns>
+        protected DirectionMoveBuilder GetMovesInDirection(int startRow, int startCol, int maxSteps, List<(int, int)> occupiedCells, int rowDirec, int colDirec, Cell cell, Dictionary<string, Cell> cellIds)
         {
             var moves = new List<(int, int)>();
             int r = startRow + rowDirec;
             int c = startCol + colDirec;
             int steps = 0;
+            
+            bool collision = false;
 
             while (r >= 1 && r <= 8 && c >= 1 && c <= 8 && steps < maxSteps)
             {
 
-                if (Collision(r, c, occupiedCells, moves, cell, cellIds))
-                {
+                if (occupiedCells.Contains((r, c))) //collision
+                { 
+                    collision = true;
+                    HandleCollision(r, c, occupiedCells, moves,cell, cellIds);
                     break;
                 }
-                moves.Add((r, c));
+                moves.Add((r,c));
                 r += rowDirec;
                 c += colDirec;
                 steps++;
             }
-            return moves;
+            return new DirectionMoveBuilder(moves, collision);
         }
 
         /// <summary>
@@ -86,6 +96,7 @@ namespace Chess.Logic.Abstract
         /// <param name="occupiedCells">A list of all currently occupied coordinates on the board.</param>
         /// <returns>A list of (row, column) coordinates representing all valid cells the piece can move to.</returns>
         protected abstract List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds);
+
     }
 
 }

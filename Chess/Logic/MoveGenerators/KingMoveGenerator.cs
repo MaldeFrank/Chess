@@ -15,16 +15,16 @@ namespace Chess.Logic
             const int maxSteps = 1;
 
             //Diagonal
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, +1, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, -1, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, -1, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, +1, cell, cellIds));
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, +1, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, -1, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, -1, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, +1, cell, cellIds).GetResults());
 
             //Straight
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, 0, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, 0, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, +1, cell, cellIds));
-            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, -1, cell, cellIds));
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, +1, 0, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, -1, 0, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, +1, cell, cellIds).GetResults());
+            moves.AddRange(GetMovesInDirection(row, col, maxSteps, occupiedCells, 0, -1, cell, cellIds).GetResults());
             return moves;
         }
     }
