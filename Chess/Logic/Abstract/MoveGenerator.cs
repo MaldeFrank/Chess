@@ -5,13 +5,19 @@ namespace Chess.Logic.Abstract
 {
     public abstract class MoveGenerator
     {
+        
+        public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
+        {
+            return Generate(cell, cellIds);
+        }
+
         /// <summary>
         /// Generates all the possible moves for the selected cell
         /// </summary>
         /// <param name="cell">Selected cell</param>
         /// <param name="cellIds">All board cells</param>
         /// <returns>List of cellids in format "a1" for all possible moves</returns>
-        public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
+        protected List<string> Generate(Cell cell, Dictionary<string, Cell> cellIds)
         {
             var piece = cell.Occupant;
             if (piece == null) return new List<string>();
@@ -22,12 +28,12 @@ namespace Chess.Logic.Abstract
 
             return ChessBoardUtility.ToCellId(baseMoves);
         }
+        
 
-
-        private bool Collision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
+        protected bool Collision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
         {
             (int, int) potentialMove = (row, col);
-            
+
             if (occupiedCells.Contains(potentialMove))
             {
                 List<string> move = ChessBoardUtility.ToCellId([potentialMove]);
