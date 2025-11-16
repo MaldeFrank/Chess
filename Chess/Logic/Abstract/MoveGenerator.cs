@@ -41,17 +41,6 @@ namespace Chess.Logic.Abstract
             }
         }
 
-        protected bool Collision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
-        {
-            (int, int) potentialMove = (row, col);
-
-            if (occupiedCells.Contains(potentialMove))
-            {
-                return true;
-            }
-            return false;
-        }
-
         /// <summary>
         /// Calculates moves in given direction specified by row and column movement.
         /// </summary>
