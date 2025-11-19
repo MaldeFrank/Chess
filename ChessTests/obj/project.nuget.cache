@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "k2PancwK1WM=",
+  "dgSpecHash": "+pciy6DTHUg=",
   "success": true,
   "projectFilePath": "C:\\Users\\ohsab\\Desktop\\Softwareteknologi\\1. Semester\\Avanceret objektorienteret programmering med C# og .NET\\Chess\\ChessTests\\ChessTests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ohsab\\.nuget\\packages\\dotnetseleniumextras.waithelpers\\3.11.0\\dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "C:\\Users\\ohsab\\.nuget\\packages\\microsoft.applicationinsights\\2.22.0\\microsoft.applicationinsights.2.22.0.nupkg.sha512",
     "C:\\Users\\ohsab\\.nuget\\packages\\microsoft.codecoverage\\17.12.0\\microsoft.codecoverage.17.12.0.nupkg.sha512",
     "C:\\Users\\ohsab\\.nuget\\packages\\microsoft.net.test.sdk\\17.12.0\\microsoft.net.test.sdk.17.12.0.nupkg.sha512",

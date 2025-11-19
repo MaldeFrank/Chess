@@ -8,6 +8,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeleniumExtras.WaitHelpers;
 
 
 namespace ChessTests.Models
@@ -20,20 +21,35 @@ namespace ChessTests.Models
         private static IWebDriver _driver;
 
         [ClassInitialize]
-        public static void Setup(TestContext context)
+        public static void SetupAndStartGameTest(TestContext context)
         {
             _driver = new ChromeDriver(DriverDirectory);
-            _driver.Navigate().GoToUrl("");
+            _driver.Navigate().GoToUrl("https://localhost:7193/startgame");
+
         }
 
         [TestMethod]
-        public void StartGameTest()
+        public void StartGameAndMovePieceTest()
         {
-        }
+            // Indtast spiller-navne
+            _driver.FindElement(By.Id("name1")).SendKeys("Alice");
+            _driver.FindElement(By.Id("name2")).SendKeys("Bob");
 
-        [TestMethod]
-        public void MovePieceTest()
-        {
+            // Start spillet
+            _driver.FindElement(By.Id("beginGame")).Click();
+
+            // Vent lidt for navigation
+            Thread.Sleep(5000);
+
+            // Bekræft at vi er på /board siden
+            Assert.IsTrue(_driver.Url.Contains("/board"));
+
+
+            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+
+            _driver.FindElement(By.Id("a2")).Click();
+
+            _driver.FindElement(By.Id("a3")).Click();
         }
     }
 }

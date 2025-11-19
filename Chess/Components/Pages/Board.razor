@@ -1,5 +1,4 @@
 @page "/board"
-@rendermode InteractiveServer
 @using Models
 @using System.Diagnostics
 @using System
@@ -12,14 +11,13 @@
     <div class="alert alert-info text-center">
         @if (game.Winner != null)
         {
-            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? "Hvid" : "Sort")</strong>
+            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? game.Player1.Name : game.Player2.Name)</strong>
         }
         else
         {
-            <strong>Tur: @(game.CurrentTurn == Player.White ? "Hvid" : "Sort")</strong>
+            <strong>Tur: @currentPlayer.Name (@currentPlayer.Color)</strong>
         }
     </div>
-
 
     <!-- Brættet -->
     <div id="chessboard"
@@ -29,19 +27,19 @@
             <div @onclick="() => OnCellClick(kvp.Key)"
                  id="@kvp.Key"
                  style="
-                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                        height:@kvp.Value.Height;
-                        width:@kvp.Value.Width;
-                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                        display:flex;
-                        justify-content:center;
-                        align-items:center;
-                        font-size:48px;
-                        position:relative;">
+                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                    height:@kvp.Value.Height;
+                                    width:@kvp.Value.Width;
+                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                    display:flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    font-size:48px;
+                                    position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
-                    var color = kvp.Value.Occupant.Owner == Player.White ? game.Player1.Color : game.Player2.Color;
+                    var color = kvp.Value.Occupant.Owner == game.Player1.PlayerEnum ? game.Player1.Color : game.Player2.Color;
                     <span style="color:@color; font-size:4rem; text-shadow:0px 0px 2px gray;">
                         @kvp.Value.Occupant.UnicodeSymbol
                     </span>
@@ -65,16 +63,24 @@
 
     Chess.Models.Game game = new Chess.Models.Game();
 
+    private ChessPlayer currentPlayer => game.CurrentTurn == game.Player1.PlayerEnum ? game.Player1 : game.Player2;
+
     protected override void OnParametersSet()
     {
         game.Player1.Name = Player1Name;
         game.Player1.Color = Player1Color;
+        game.Player1.PlayerEnum = Player.White; // sikre kobling
+
         game.Player2.Name = Player2Name;
         game.Player2.Color = Player2Color;
+        game.Player2.PlayerEnum = Player.Black; // sikre kobling
     }
 
     private void OnCellClick(string cellId)
     {
+        // Find den spiller, der har tur
+        var currentPlayer = game.CurrentTurn == game.Player1.PlayerEnum ? game.Player1 : game.Player2;
+
         var cell = game.Board.BoardCells[cellId];
 
         if (cell.IsHighlighted && game.Board.Selected != null)
@@ -102,7 +108,7 @@
             }
         }
         // Hvis cellen har brik af nuværende spiller, vælg den
-        else if (cell.Occupant != null && cell.Occupant.Owner == game.CurrentTurn)
+        else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {
             game.Board.SelectField(cellId);
             StateHasChanged(); // opdater selection/highlights
