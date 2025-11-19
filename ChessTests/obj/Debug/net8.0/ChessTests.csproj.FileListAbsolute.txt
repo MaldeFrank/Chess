@@ -355,3 +355,9 @@ C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret 
 C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\obj\Debug\net8.0\ChessTests.pdb
 C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\obj\Debug\net8.0\ChessTests.genruntimeconfig.cache
 C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\obj\Debug\net8.0\ref\ChessTests.dll
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\WebDriver.Support.dll
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\WebDriver.dll
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\runtimes\linux\native\selenium-manager
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\runtimes\osx\native\selenium-manager
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\runtimes\win\native\selenium-manager.exe
+C:\Users\ohsab\Desktop\Softwareteknologi\1. Semester\Avanceret objektorienteret programmering med C# og .NET\Chess\ChessTests\bin\Debug\net8.0\SeleniumExtras.WaitHelpers.dll
