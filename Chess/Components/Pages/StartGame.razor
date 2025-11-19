@@ -15,7 +15,7 @@
 <div class="player-setup">
     <h2>Player 1</h2>
     <p>Please enter the name of player 1:</p>
-    <input type="text" @bind="player1.Name" placeholder="Player 1 name" />
+    <input type="text" id="name1" @bind="player1.Name" placeholder="Player 1 name" />
 
     <p>Please select the color for player 1:</p>
     <select @bind="player1.Color">
@@ -31,7 +31,7 @@
 <div class="player-setup">
     <h2>Player 2</h2>
     <p>Please enter the name of player 2:</p>
-    <input type="text" @bind="player2.Name" placeholder="Player 2 name" />
+    <input type="text" id="name2" @bind="player2.Name" placeholder="Player 2 name" />
 
     <p>Please select the color for player 2:</p>
     <select @bind="player2.Color">
@@ -44,7 +44,7 @@
 
 <br>
 
-<button @onclick="BeginGame">Start Game</button>
+<button id="beginGame" @onclick="BeginGame">Start Game</button>
 
 @if (ErrorMessage is not null)
 {
