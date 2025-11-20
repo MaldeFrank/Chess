@@ -4,6 +4,10 @@ namespace Chess.Logic.Abstract
 {
     public abstract class MoveGenerator
     {
+        protected virtual List<(int, int)> GenerateSpecialMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds)
+        {
+            return new List<(int, int)>();
+        }
 
         public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
         {
@@ -28,7 +32,7 @@ namespace Chess.Logic.Abstract
             return ChessBoardUtility.ToCellId(baseMoves);
         }
 
-        protected virtual void HandleCollision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
+        protected void HandleCollision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
         {
             (int, int) potentialMove = (row, col);
 
@@ -40,7 +44,7 @@ namespace Chess.Logic.Abstract
         }
 
         /// <summary>
-        /// Calculates moves in given direction specified by row and column movement.
+        /// Calculates moves in given direction specified by row and column movement/direction.
         /// </summary>
         /// <param name="startRow">Starting row of selected cell</param>
         /// <param name="startCol">Starting column of selected cell</param>
@@ -55,24 +59,24 @@ namespace Chess.Logic.Abstract
             int r = startRow + rowDirec;
             int c = startCol + colDirec;
             int steps = 0;
-            
+
             bool collision = false;
 
             while (r >= 1 && r <= 8 && c >= 1 && c <= 8 && steps < maxSteps)
             {
 
                 if (occupiedCells.Contains((r, c))) //collision
-                { 
+                {
                     collision = true;
-                    HandleCollision(r, c, occupiedCells, moves,cell, cellIds);
+                    HandleCollision(r, c, occupiedCells, moves, cell, cellIds);
                     break;
                 }
-                moves.Add((r,c));
+                moves.Add((r, c));
                 r += rowDirec;
                 c += colDirec;
                 steps++;
             }
-            return new DirectionMoveBuilder(moves, collision);
+            return new DirectionMoveBuilder(moves, collision, cellIds);
         }
 
         /// <summary>

@@ -19,7 +19,7 @@
         }
     </div>
 
-    <!-- Brættet -->
+    <!-- Brï¿½ttet -->
     <div id="chessboard"
          style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
@@ -94,6 +94,7 @@
 
                 selectedPiece.File = cell.Col;
                 selectedPiece.Rank = cell.Row;
+                selectedPiece.Moves++; // For tracking moves made
 
                 // Fjern highlight og selection
                 game.Board.Selected.IsSelected = false;
@@ -107,7 +108,7 @@
                 StateHasChanged(); // opdater UI
             }
         }
-        // Hvis cellen har brik af nuværende spiller, vælg den
+        // Hvis cellen har brik af nuvï¿½rende spiller, vï¿½lg den
         else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {
             game.Board.SelectField(cellId);

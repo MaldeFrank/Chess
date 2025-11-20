@@ -12,6 +12,7 @@ namespace Chess.Models
         public int File { get; set; }
         public int Rank { get; set; }
         public bool IsCaptured { get; set; }
+        public int Moves {get;set;}
 
         public Piece(PieceType type, Player owner, int file, int rank)
         {
@@ -20,6 +21,7 @@ namespace Chess.Models
             File = file;
             Rank = rank;
             IsCaptured = false;
+            this.Moves = 0;
         }
 
         // Unicode symbols for chess pieces
