@@ -4,10 +4,6 @@ namespace Chess.Logic.Abstract
 {
     public abstract class MoveGenerator
     {
-        protected virtual List<(int, int)> GenerateSpecialMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds)
-        {
-            return new List<(int, int)>();
-        }
 
         public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
         {

@@ -1,9 +1,12 @@
 @page "/board"
+@using Chess.Logic
 @using Models
 @using System.Diagnostics
 @using System
 @using Microsoft.AspNetCore.Components
 @using Chess.Models
+@using System.Xml
+@using System.Buffers
 
 
 <div class="container my-3">
@@ -11,7 +14,8 @@
     <div class="alert alert-info text-center">
         @if (game.Winner != null)
         {
-            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? game.Player1.Name : game.Player2.Name)</strong>
+            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? game.Player1.Name :
+                            game.Player2.Name)</strong>
         }
         else
         {
@@ -21,21 +25,19 @@
 
     <!-- Br�ttet -->
     <div id="chessboard"
-         style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
+        style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
-            <div @onclick="() => OnCellClick(kvp.Key)"
-                 id="@kvp.Key"
-                 style="
-                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                    height:@kvp.Value.Height;
-                                    width:@kvp.Value.Width;
-                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                    display:flex;
-                                    justify-content:center;
-                                    align-items:center;
-                                    font-size:48px;
-                                    position:relative;">
+            <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
+                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                        height:@kvp.Value.Height;
+                                        width:@kvp.Value.Width;
+                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                        display:flex;
+                                        justify-content:center;
+                                        align-items:center;
+                                        font-size:48px;
+                                        position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -95,7 +97,7 @@
                 selectedPiece.File = cell.Col;
                 selectedPiece.Rank = cell.Row;
                 selectedPiece.Moves++; // For tracking moves made
-
+                CheckPassant(selectedPiece, cell);
                 // Fjern highlight og selection
                 game.Board.Selected.IsSelected = false;
                 game.Board.Selected = null;
@@ -113,6 +115,26 @@
         {
             game.Board.SelectField(cellId);
             StateHasChanged(); // opdater selection/highlights
+        }
+    }
+
+    //If piece type is pawn, it checks cell behind after move to check for passant.
+    private void CheckPassant(Piece selectedPiece, Cell cell) // TODO: Decouple game logic from the UI layer
+    {
+        if (selectedPiece.Type == PieceType.Pawn)
+        {
+            Console.WriteLine("passantCheck");
+            (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
+            Console.WriteLine(movedTo);
+            int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Moves back if black, and right if white
+           
+            (int, int) passantLocation = (movedTo.Item1,movedTo.Item2+checkPassant); //Gets the location of the passant
+            Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, game.Board.BoardCells);
+            
+            if(passantCell?.Occupant!=null &&passantCell.Occupant.Type==PieceType.Pawn){
+             Console.WriteLine("Destroy pawn");
+             passantCell.Occupant = null;
+            }
         }
     }
 }

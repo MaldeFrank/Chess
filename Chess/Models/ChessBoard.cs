@@ -73,7 +73,7 @@ namespace Chess.Models
             ;
 
         }
-
+       
 
         public void ValidateBoardCells()
         {
@@ -101,7 +101,6 @@ namespace Chess.Models
                     ValidatePiecePlacement(cell.Occupant);
             }
         }
-
 
 
     }
