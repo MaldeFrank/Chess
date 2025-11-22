@@ -29,15 +29,15 @@
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
-                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                        height:@kvp.Value.Height;
-                                        width:@kvp.Value.Width;
-                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                        display:flex;
-                                        justify-content:center;
-                                        align-items:center;
-                                        font-size:48px;
-                                        position:relative;">
+                                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                        height:@kvp.Value.Height;
+                                                        width:@kvp.Value.Width;
+                                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                        display:flex;
+                                                        justify-content:center;
+                                                        align-items:center;
+                                                        font-size:48px;
+                                                        position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -97,7 +97,10 @@
                 selectedPiece.File = cell.Col;
                 selectedPiece.Rank = cell.Row;
                 selectedPiece.Moves++; // For tracking moves made
+
                 CheckPassant(selectedPiece, cell);
+                QueenSpawnCheck(selectedPiece, cell);
+
                 // Fjern highlight og selection
                 game.Board.Selected.IsSelected = false;
                 game.Board.Selected = null;
@@ -123,18 +126,55 @@
     {
         if (selectedPiece.Type == PieceType.Pawn)
         {
-            Console.WriteLine("passantCheck");
-            (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
-            Console.WriteLine(movedTo);
-            int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Moves back if black, and right if white
-           
-            (int, int) passantLocation = (movedTo.Item1,movedTo.Item2+checkPassant); //Gets the location of the passant
-            Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, game.Board.BoardCells);
-            
-            if(passantCell?.Occupant!=null &&passantCell.Occupant.Type==PieceType.Pawn){
-             Console.WriteLine("Destroy pawn");
-             passantCell.Occupant = null;
+            try
+            {
+                (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
+                Console.WriteLine(movedTo);
+                int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Check left is white, and right if black.
+
+                (int, int) passantLocation = (movedTo.Item1, movedTo.Item2 + checkPassant); //Gets the location of the passant
+                Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, game.Board.BoardCells);
+
+                if (passantCell?.Occupant != null && passantCell.Occupant.Type == PieceType.Pawn)
+                {
+                    passantCell.Occupant = null;
+                }
             }
+            catch (NullReferenceException ex)
+            {
+                Console.WriteLine($"NUll reference: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex){
+                Console.WriteLine($"Cell id not found: {ex.Message}");
+            }
+
+        }
+    }
+
+    private void QueenSpawnCheck(Piece selectedPiece, Cell cell)
+    {
+        try
+        {
+
+            if (selectedPiece.Type == PieceType.Pawn)
+            {
+                int queenSpawnPos = selectedPiece.Owner == Player.White ? 8 : 1;
+
+
+                if (cell.Col == queenSpawnPos)
+                {
+                    selectedPiece.Type = PieceType.Queen;
+                }
+            }
+        }
+        catch (NullReferenceException ex)
+        {
+            Console.WriteLine($"NUll reference: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
         }
     }
 }
