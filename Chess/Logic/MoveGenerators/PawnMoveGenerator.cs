@@ -64,28 +64,28 @@ namespace Chess.Logic
               {
                   if (cell.Col == passantPos) //If pawn is at passant position
                   {
-                          (int, int) passantOnePos = (cell.Row+1, cell.Col);
-                          (int, int) passantTwoPos = (cell.Row-1, cell.Col);
+                      (int, int) passantOnePos = (cell.Row + 1, cell.Col);
+                      (int, int) passantTwoPos = (cell.Row - 1, cell.Col);
 
-                          string passantOneId = ToCellId([passantOnePos])[0];
-                          string passantTwoId = ToCellId([passantTwoPos])[0];
+                      string passantOneId = InRange(passantOnePos) ? ToCellId([passantOnePos])[0] : "";
+                      string passantTwoId = InRange(passantTwoPos) ? ToCellId([passantTwoPos])[0] : "";
 
-                          Piece? pieceOne = null;
-                          Piece? pieceTwo = null;
+                      Piece? pieceOne = null;
+                      Piece? pieceTwo = null;
 
-                          pieceOne = cells[passantOneId].Occupant;
-                          pieceTwo = cells[passantTwoId].Occupant;
+                      pieceOne = passantOneId != "" ? cells[passantOneId].Occupant : null;
+                      pieceTwo = passantTwoId != "" ? cells[passantTwoId].Occupant : null;
 
-                          if (pieceOne != null && pieceOne.Owner != cell.Occupant?.Owner&&pieceOne.Moves==1)
-                          {
-                              moves.Add((passantOnePos.Item1, passantOnePos.Item2+colDirec));
-                          }
-
-                          if (pieceTwo != null && pieceTwo.Owner != cell.Occupant?.Owner&&pieceTwo.Moves==1)
-                          {
-                              moves.Add((passantTwoPos.Item1, passantTwoPos.Item2+colDirec));
-                          }
+                      if (pieceOne != null && pieceOne.Owner != cell.Occupant?.Owner && pieceOne.Moves == 1)
+                      {
+                          moves.Add((passantOnePos.Item1, passantOnePos.Item2 + colDirec));
                       }
+
+                      if (pieceTwo != null && pieceTwo.Owner != cell.Occupant?.Owner && pieceTwo.Moves == 1)
+                      {
+                          moves.Add((passantTwoPos.Item1, passantTwoPos.Item2 + colDirec));
+                      }
+                  }
               })
              .GetResults());
         }

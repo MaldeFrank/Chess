@@ -75,6 +75,15 @@ namespace Chess.Logic.Abstract
             return new DirectionMoveBuilder(moves, collision, cellIds);
         }
 
+        protected bool InRange((int, int) move)
+        {
+            bool inRange = true;
+            if (move.Item1 < 1 || move.Item1 > 8) inRange = false;
+            if (move.Item2 < 1 || move.Item2 > 8) inRange = false;
+
+            return inRange;
+        }
+
         /// <summary>
         /// When implemented in a derived class, this method calculates all possible target 
         /// coordinates (moves) for the specific piece type located on the starting cell, 
