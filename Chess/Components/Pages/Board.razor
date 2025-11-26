@@ -1,5 +1,6 @@
 @page "/board"
 @using Chess.Logic
+@using Chess.logic
 @using Models
 @using System.Diagnostics
 @using System
@@ -29,15 +30,15 @@
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
-                                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                                        height:@kvp.Value.Height;
-                                                        width:@kvp.Value.Width;
-                                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                                        display:flex;
-                                                        justify-content:center;
-                                                        align-items:center;
-                                                        font-size:48px;
-                                                        position:relative;">
+                                                                background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                                height:@kvp.Value.Height;
+                                                                width:@kvp.Value.Width;
+                                                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                                display:flex;
+                                                                justify-content:center;
+                                                                align-items:center;
+                                                                font-size:48px;
+                                                                position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -90,6 +91,8 @@
             var selectedPiece = game.Board.Selected.Occupant;
             if (selectedPiece != null)
             {
+                
+                if(cell.Occupant!=null){game.Board.ThreatTracker.PieceDead(cell.Occupant);} // If piece dies stop tracking
                 // Flyt brik
                 cell.Occupant = selectedPiece;
                 game.Board.Selected.Occupant = null;
@@ -100,6 +103,8 @@
 
                 CheckPassant(selectedPiece, cell);
                 QueenSpawnCheck(selectedPiece, cell);
+                List<string> moves = MoveRegistry.Generators[selectedPiece.Type].GenerateMoves(cell, game.Board.BoardCells, game.Board.ThreatTracker);
+                game.Board.ThreatTracker.AddThreats(selectedPiece, moves.ToHashSet());
 
                 // Fjern highlight og selection
                 game.Board.Selected.IsSelected = false;
@@ -144,7 +149,8 @@
             {
                 Console.WriteLine($"NUll reference: {ex.Message}");
             }
-            catch (KeyNotFoundException ex){
+            catch (KeyNotFoundException ex)
+            {
                 Console.WriteLine($"Cell id not found: {ex.Message}");
             }
 

@@ -5,6 +5,24 @@ namespace Chess.Logic
 {
     public class KingMoveGenerator : MoveGenerator
     {
+        protected override bool ShouldStopMove(int row, int col, Cell cell, List<(int, int)> moves)
+        {
+            string cellId = ChessBoardUtility.ToCellId([(row, col)])[0];
+            var occupant = cell?.Occupant;
+            if (occupant == null)
+                return false;
+                
+            if (ThreatTracker.IsCellTargeted(cellId, occupant.Owner))
+            {
+                moves.Clear();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         protected override List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds)
         {
             int col = cell.Col; // 1–8

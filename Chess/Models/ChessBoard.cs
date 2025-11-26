@@ -9,6 +9,7 @@ namespace Chess.Models
         public List<string> PossibleMoves = new List<string>();
         public Dictionary<string, Cell> BoardCells { get; set; } = new();
         public Cell? Selected { get; set; }
+        public ThreatTracker ThreatTracker = new ThreatTracker();
 
         public string[] CellIds { get; set; } = [
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8",
@@ -63,7 +64,7 @@ namespace Chess.Models
             if (Selected.Occupant != null)
             {
                 piece = Selected.Occupant;
-                PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
+                PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells, ThreatTracker); // Sets the new possible moves
 
                 PossibleMoves.ForEach((id =>
                 {
@@ -73,7 +74,9 @@ namespace Chess.Models
             ;
 
         }
-       
+
+    
+
 
         public void ValidateBoardCells()
         {

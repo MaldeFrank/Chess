@@ -5,8 +5,11 @@ namespace Chess.Logic.Abstract
     public abstract class MoveGenerator
     {
 
-        public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds)
+        protected ThreatTracker ThreatTracker;
+
+        public List<string> GenerateMoves(Cell cell, Dictionary<string, Cell> cellIds, ThreatTracker threatTracker)
         {
+            this.ThreatTracker = threatTracker;
             return Generate(cell, cellIds);
         }
 
@@ -39,6 +42,11 @@ namespace Chess.Logic.Abstract
             }
         }
 
+        protected virtual bool ShouldStopMove(int row, int col, Cell cell, List<(int, int)> moves)
+        {
+            return false;
+        }
+
         /// <summary>
         /// Calculates moves in given direction specified by row and column movement/direction.
         /// </summary>
@@ -60,6 +68,7 @@ namespace Chess.Logic.Abstract
 
             while (r >= 1 && r <= 8 && c >= 1 && c <= 8 && steps < maxSteps)
             {
+                if (ShouldStopMove(r, c, cell, moves) == true) { break; }
 
                 if (occupiedCells.Contains((r, c))) //collision
                 {
