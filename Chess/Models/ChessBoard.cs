@@ -1,6 +1,7 @@
 
 
 using Chess.logic;
+using Chess.Logic;
 
 namespace Chess.Models
 {
@@ -75,8 +76,88 @@ namespace Chess.Models
 
         }
 
-    
 
+        public void MakeMove(Cell targetCell)
+        {
+            if (Selected?.Occupant == null) return;
+
+            var movingPiece = Selected.Occupant;
+
+            if (targetCell.Occupant != null)
+            {
+                ThreatTracker.PieceDead(targetCell.Occupant);
+            }
+
+            HandleSpecialMoveLogic(movingPiece, targetCell);
+
+            targetCell.Occupant = movingPiece;
+            Selected.Occupant = null;
+
+            movingPiece.File = targetCell.Col;
+            movingPiece.Rank = targetCell.Row;
+            movingPiece.Moves++;
+
+            var newMoves = MoveRegistry.Generators[movingPiece.Type].GenerateMoves(targetCell, BoardCells, ThreatTracker);
+            ThreatTracker.AddThreats(movingPiece, newMoves.ToHashSet());
+
+            ClearSelection();
+        }
+
+        private void ClearSelection()
+        {
+            if (Selected != null) Selected.IsSelected = false;
+            Selected = null;
+            PossibleMoves.ForEach(id => BoardCells[id].IsHighlighted = false);
+            PossibleMoves.Clear();
+        }
+
+        private void HandleSpecialMoveLogic(Piece piece, Cell targetCell)
+        {
+            if (piece.Type == PieceType.Pawn)
+            {
+                CheckPassant(piece, targetCell);
+                QueenSpawnCheck(piece, targetCell);
+            }
+        }
+
+        //If piece type is pawn, it checks cell behind after move to check for passant.
+        private void CheckPassant(Piece selectedPiece, Cell cell) 
+        {
+            if (selectedPiece.Type == PieceType.Pawn)
+            {
+                try
+                {
+                    (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
+                    int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Check left is white, and right if black.
+
+                    (int, int) passantLocation = (movedTo.Item1, movedTo.Item2 + checkPassant); //Gets the location of the passant
+                    Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, this.BoardCells);
+
+                    if (passantCell?.Occupant != null && passantCell.Occupant.Type == PieceType.Pawn)
+                    {
+                        passantCell.Occupant = null;
+                    }
+                }
+                catch (NullReferenceException ex)
+                {
+                    Console.WriteLine($"NUll reference: {ex.Message}");
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    Console.WriteLine($"Cell id not found: {ex.Message}");
+                }
+            }
+        }
+
+        private void QueenSpawnCheck(Piece piece, Cell targetCell)
+        {
+            int promotionRank = piece.Owner == Player.White ? 8 : 1;
+
+            if (targetCell.Col == promotionRank)
+            {
+                piece.Type = PieceType.Queen;
+            }
+        }
 
         public void ValidateBoardCells()
         {

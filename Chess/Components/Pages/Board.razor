@@ -30,15 +30,15 @@
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
-                                                                background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                                                height:@kvp.Value.Height;
-                                                                width:@kvp.Value.Width;
-                                                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                                                display:flex;
-                                                                justify-content:center;
-                                                                align-items:center;
-                                                                font-size:48px;
-                                                                position:relative;">
+                                                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                                    height:@kvp.Value.Height;
+                                                                    width:@kvp.Value.Width;
+                                                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                                    display:flex;
+                                                                    justify-content:center;
+                                                                    align-items:center;
+                                                                    font-size:48px;
+                                                                    position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -81,106 +81,20 @@
 
     private void OnCellClick(string cellId)
     {
-        // Find den spiller, der har tur
-        var currentPlayer = game.CurrentTurn == game.Player1.PlayerEnum ? game.Player1 : game.Player2;
-
         var cell = game.Board.BoardCells[cellId];
 
         if (cell.IsHighlighted && game.Board.Selected != null)
         {
-            var selectedPiece = game.Board.Selected.Occupant;
-            if (selectedPiece != null)
-            {
-                
-                if(cell.Occupant!=null){game.Board.ThreatTracker.PieceDead(cell.Occupant);} // If piece dies stop tracking
-                // Flyt brik
-                cell.Occupant = selectedPiece;
-                game.Board.Selected.Occupant = null;
+            game.Board.MakeMove(cell);
 
-                selectedPiece.File = cell.Col;
-                selectedPiece.Rank = cell.Row;
-                selectedPiece.Moves++; // For tracking moves made
-
-                CheckPassant(selectedPiece, cell);
-                QueenSpawnCheck(selectedPiece, cell);
-                List<string> moves = MoveRegistry.Generators[selectedPiece.Type].GenerateMoves(cell, game.Board.BoardCells, game.Board.ThreatTracker);
-                game.Board.ThreatTracker.AddThreats(selectedPiece, moves.ToHashSet());
-
-                // Fjern highlight og selection
-                game.Board.Selected.IsSelected = false;
-                game.Board.Selected = null;
-                game.Board.PossibleMoves.ForEach(id => game.Board.BoardCells[id].IsHighlighted = false);
-                game.Board.PossibleMoves.Clear();
-
-                game.CheckWinner();
-                game.NextTurn();
-
-                StateHasChanged(); // opdater UI
-            }
+            game.CheckWinner();
+            game.NextTurn();
         }
-        // Hvis cellen har brik af nuv�rende spiller, v�lg den
         else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {
             game.Board.SelectField(cellId);
-            StateHasChanged(); // opdater selection/highlights
         }
-    }
 
-    //If piece type is pawn, it checks cell behind after move to check for passant.
-    private void CheckPassant(Piece selectedPiece, Cell cell) // TODO: Decouple game logic from the UI layer
-    {
-        if (selectedPiece.Type == PieceType.Pawn)
-        {
-            try
-            {
-                (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
-                Console.WriteLine(movedTo);
-                int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Check left is white, and right if black.
-
-                (int, int) passantLocation = (movedTo.Item1, movedTo.Item2 + checkPassant); //Gets the location of the passant
-                Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, game.Board.BoardCells);
-
-                if (passantCell?.Occupant != null && passantCell.Occupant.Type == PieceType.Pawn)
-                {
-                    passantCell.Occupant = null;
-                }
-            }
-            catch (NullReferenceException ex)
-            {
-                Console.WriteLine($"NUll reference: {ex.Message}");
-            }
-            catch (KeyNotFoundException ex)
-            {
-                Console.WriteLine($"Cell id not found: {ex.Message}");
-            }
-
-        }
-    }
-
-    private void QueenSpawnCheck(Piece selectedPiece, Cell cell)
-    {
-        try
-        {
-
-            if (selectedPiece.Type == PieceType.Pawn)
-            {
-                int queenSpawnPos = selectedPiece.Owner == Player.White ? 8 : 1;
-
-
-                if (cell.Col == queenSpawnPos)
-                {
-                    selectedPiece.Type = PieceType.Queen;
-                }
-            }
-        }
-        catch (NullReferenceException ex)
-        {
-            Console.WriteLine($"NUll reference: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error {ex.Message}");
-            Console.WriteLine(ex.StackTrace);
-        }
+        StateHasChanged();
     }
 }
