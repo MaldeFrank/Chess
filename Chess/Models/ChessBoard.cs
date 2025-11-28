@@ -1,5 +1,6 @@
 
 
+using System.Reflection;
 using Chess.logic;
 using Chess.Logic;
 
@@ -42,6 +43,7 @@ namespace Chess.Models
 
         }
 
+
         public void PlacePiece(Piece piece)
         {
             string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
@@ -51,12 +53,13 @@ namespace Chess.Models
             }
         }
 
-        public void SelectField(string selected)
+        public bool SelectField(string selected)
         {
-            //Highligts the selected field
-            if (Selected != null) { Selected.IsSelected = false; }
+
+            if (Selected != null) { Selected.IsSelected = false; } //Removes select from last
             Selected = BoardCells[selected];
-            Selected.IsSelected = true;
+
+            Selected.IsSelected = true; //Highligts the selected field
 
             //Highligts the possible move choices
             if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); } // Resets the possible moves
@@ -73,20 +76,16 @@ namespace Chess.Models
                 }));
             }
             ;
-
+            return true;
         }
 
 
+        //Action when player moves to cell
         public void MakeMove(Cell targetCell)
         {
-            if (Selected?.Occupant == null) return;
+            if (Selected?.Occupant == null) return; // Can it ever be null here?
 
             var movingPiece = Selected.Occupant;
-
-            if (targetCell.Occupant != null)
-            {
-                ThreatTracker.PieceDead(targetCell.Occupant);
-            }
 
             HandleSpecialMoveLogic(movingPiece, targetCell);
 
@@ -97,8 +96,7 @@ namespace Chess.Models
             movingPiece.Rank = targetCell.Row;
             movingPiece.Moves++;
 
-            var newMoves = MoveRegistry.Generators[movingPiece.Type].GenerateMoves(targetCell, BoardCells, ThreatTracker);
-            ThreatTracker.AddThreats(movingPiece, newMoves.ToHashSet());
+            ThreatTracker.UpdateAllThreats(BoardCells);
 
             ClearSelection();
         }
@@ -121,7 +119,7 @@ namespace Chess.Models
         }
 
         //If piece type is pawn, it checks cell behind after move to check for passant.
-        private void CheckPassant(Piece selectedPiece, Cell cell) 
+        private void CheckPassant(Piece selectedPiece, Cell cell)
         {
             if (selectedPiece.Type == PieceType.Pawn)
             {
