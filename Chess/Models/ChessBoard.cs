@@ -12,7 +12,8 @@ namespace Chess.Models
         public Dictionary<string, Cell> BoardCells { get; set; } = new();
         public Cell? Selected { get; set; }
         public ThreatTracker ThreatTracker = new ThreatTracker();
-
+        public Cell WhiteKingPos;
+        public Cell BlackKingPos;
         public string[] CellIds { get; set; } = [
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8",
         "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8",
@@ -50,6 +51,8 @@ namespace Chess.Models
             if (BoardCells.ContainsKey(cellId))
             {
                 BoardCells[cellId].Occupant = piece;
+                if (piece.Id == 13) { WhiteKingPos = BoardCells[cellId]; }
+                if (piece.Id == 29) { BlackKingPos = BoardCells[cellId]; }
             }
         }
 
@@ -81,16 +84,21 @@ namespace Chess.Models
 
 
         //Action when player moves to cell
-        public void MakeMove(Cell targetCell)
+        public bool MakeMove(Cell targetCell)
         {
-            if (Selected?.Occupant == null) return; // Can it ever be null here?
-
-            var movingPiece = Selected.Occupant;
+            if (Selected?.Occupant == null) return false; // Can it ever be null here?
+            Piece movingPiece = Selected.Occupant;
+            Cell startCell = Selected;
+            Piece capturedPiece = targetCell.Occupant;
+            int oldCol = movingPiece.File;
+            int oldRow = movingPiece.Rank;
 
             HandleSpecialMoveLogic(movingPiece, targetCell);
 
             targetCell.Occupant = movingPiece;
+            KingTracking(targetCell, movingPiece); //Tracking kings position for checks
             Selected.Occupant = null;
+
 
             movingPiece.File = targetCell.Col;
             movingPiece.Rank = targetCell.Row;
@@ -98,7 +106,24 @@ namespace Chess.Models
 
             ThreatTracker.UpdateAllThreats(BoardCells);
 
+            Player owner = movingPiece.Owner == Player.White ? Player.White : Player.Black;
+            Cell kingPos = owner == Player.White ? WhiteKingPos : BlackKingPos;
+
+            if (ThreatTracker.IskingChecked(owner, kingPos.Id))
+            {
+                movingPiece.File = oldCol;
+                movingPiece.Rank = oldRow;
+                startCell.Occupant = movingPiece;
+
+                targetCell.Occupant = capturedPiece;
+
+                ThreatTracker.UpdateAllThreats(BoardCells);
+
+                return false;
+            }
+
             ClearSelection();
+            return true;
         }
 
         private void ClearSelection()
@@ -118,31 +143,42 @@ namespace Chess.Models
             }
         }
 
-        //If piece type is pawn, it checks cell behind after move to check for passant.
-        private void CheckPassant(Piece selectedPiece, Cell cell)
+        private void KingTracking(Cell targetCell, Piece movingPiece)
         {
-            if (selectedPiece.Type == PieceType.Pawn)
+            if (movingPiece.Type != PieceType.King) return;
+
+            Player color = movingPiece.Owner;
+            if (color == Player.White)
+                WhiteKingPos = targetCell;
+            else
+                BlackKingPos = targetCell;
+        }
+
+        //If piece type is pawn, it checks cell behind after move to check for passant.
+        private void CheckPassant(Piece movingPawn, Cell targetCell)
+        {
+            if (targetCell.Occupant != null) return; //Passant can only move to empty space
+
+            if (movingPawn.Type == PieceType.Pawn)
             {
                 try
                 {
-                    (int, int) movedTo = ChessBoardUtility.ToCoords([cell.Id])[0];
-                    int checkPassant = selectedPiece.Owner == Player.White ? -1 : +1; //Check left is white, and right if black.
+                    (int, int) movedTo = ChessBoardUtility.ToCoords([targetCell.Id])[0];
 
-                    (int, int) passantLocation = (movedTo.Item1, movedTo.Item2 + checkPassant); //Gets the location of the passant
+                    int offset = movingPawn.Owner == Player.White ? -1 : +1;
+
+                    (int, int) passantLocation = (movedTo.Item1, movedTo.Item2 + offset);
                     Cell passantCell = ChessBoardUtility.FindCellFromCoords(passantLocation, this.BoardCells);
 
                     if (passantCell?.Occupant != null && passantCell.Occupant.Type == PieceType.Pawn)
                     {
+                        if (passantCell.Occupant.Owner == movingPawn.Owner) return; //Makes sure the pawn behind is an enemy
                         passantCell.Occupant = null;
                     }
                 }
-                catch (NullReferenceException ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"NUll reference: {ex.Message}");
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    Console.WriteLine($"Cell id not found: {ex.Message}");
+                    Console.WriteLine($"Passant Error: {ex.Message}");
                 }
             }
         }

@@ -8,11 +8,17 @@ namespace Chess.Models
         private Dictionary<int, HashSet<string>> Threats = [];
         private Dictionary<int, Player> PieceColors = [];
 
-        public Player TargetPlayer { get; }
-        public string KingPosition { get; set; }
-        public delegate void KingCheck(Player target, string position);
-        public event KingCheck KingCheckEvent;
+        public event EventHandler<(Player, string)> KingCheckEvent;
 
+        public bool IskingChecked(Player player, string cell)
+        {
+            if (IsCellTargeted(cell, player))
+            {
+                KingCheckEvent?.Invoke(this, (player, cell));
+                return true;
+            }
+            return false;
+        }
         private void AddThreats(Piece piece, HashSet<string> moves)
         {
             Threats[piece.Id] = moves;

@@ -58,7 +58,7 @@
 
         private void PlacePiecesOnBoard()
         {
-            foreach (var piece in Pieces)
+            foreach (Piece piece in Pieces)
             {
                 Board.PlacePiece(piece);
             }

@@ -30,15 +30,15 @@
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
-                                                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                                                    height:@kvp.Value.Height;
-                                                                    width:@kvp.Value.Width;
-                                                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                                                    display:flex;
-                                                                    justify-content:center;
-                                                                    align-items:center;
-                                                                    font-size:48px;
-                                                                    position:relative;">
+                                                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                                        height:@kvp.Value.Height;
+                                                                        width:@kvp.Value.Width;
+                                                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                                        display:flex;
+                                                                        justify-content:center;
+                                                                        align-items:center;
+                                                                        font-size:48px;
+                                                                        position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -85,10 +85,13 @@
 
         if (cell.IsHighlighted && game.Board.Selected != null)
         {
-            game.Board.MakeMove(cell);
+            bool moveMade = game.Board.MakeMove(cell);
 
-            game.CheckWinner();
-            game.NextTurn();
+            if (moveMade)
+            {
+                game.CheckWinner();
+                game.NextTurn();
+            }
         }
         else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {
