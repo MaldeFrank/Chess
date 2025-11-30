@@ -8,6 +8,7 @@
 @using Chess.Models
 @using System.Xml
 @using System.Buffers
+@using System.Dynamic
 
 
 <div class="container my-3">
@@ -24,21 +25,42 @@
         }
     </div>
 
+    @if (game.ErrorKingChecked)
+    {
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal" tabindex="-1" style="display:block;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-danger">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">⚠️ Check!</h5>
+                        <button type="button" class="btn-close" @onclick="DismissAlert"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="fs-4">The King is in check!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="DismissAlert">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
     <!-- Br�ttet -->
     <div id="chessboard"
         style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
         @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
         {
             <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
-                                                                        background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                                                        height:@kvp.Value.Height;
-                                                                        width:@kvp.Value.Width;
-                                                                        border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                                                        display:flex;
-                                                                        justify-content:center;
-                                                                        align-items:center;
-                                                                        font-size:48px;
-                                                                        position:relative;">
+                                                                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                                                    height:@kvp.Value.Height;
+                                                                                    width:@kvp.Value.Width;
+                                                                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                                                    display:flex;
+                                                                                    justify-content:center;
+                                                                                    align-items:center;
+                                                                                    font-size:48px;
+                                                                                    position:relative;">
 
                 @if (kvp.Value.Occupant != null)
                 {
@@ -59,6 +81,11 @@
 </div>
 
 @code {
+    private void DismissAlert()
+    {
+        game.ErrorKingChecked = false;
+        StateHasChanged();
+    }
     [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
     [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";
     [Parameter, SupplyParameterFromQuery] public string Player2Name { get; set; } = "Player 2";
@@ -82,16 +109,16 @@
     private void OnCellClick(string cellId)
     {
         var cell = game.Board.BoardCells[cellId];
-
+        game.ErrorKingChecked = false; //Resets
         if (cell.IsHighlighted && game.Board.Selected != null)
         {
             bool moveMade = game.Board.MakeMove(cell);
 
             if (moveMade)
             {
-                game.CheckWinner();
                 game.NextTurn();
             }
+            game.CheckWinner();
         }
         else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {

@@ -11,6 +11,8 @@
         public Player CurrentTurn { get; set; } = Player.White;
         public Player? Winner { get; set; } = null;
 
+        public bool ErrorKingChecked = false;
+
         public Game()
         {
             // Sæt enum kobling
@@ -19,6 +21,11 @@
 
             InitializePieces();
             PlacePiecesOnBoard();
+            Board.ThreatTracker.KingCheckEvent += (sender, e) =>
+            {
+                Console.WriteLine("King is chess!");
+                ErrorKingChecked = true;
+            };
         }
 
         private void InitializePieces()
