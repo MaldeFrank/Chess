@@ -5,7 +5,6 @@ namespace Chess.Logic
 {
     public class KingMoveGenerator : MoveGenerator
     {
-      
 
         protected override List<(int, int)> GeneratePieceSpecificMoves(Cell cell, List<(int, int)> occupiedCells, Dictionary<string, Cell> cellIds)
         {

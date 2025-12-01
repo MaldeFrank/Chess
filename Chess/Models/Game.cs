@@ -1,4 +1,6 @@
-﻿namespace Chess.Models
+﻿using Chess.Logic;
+
+namespace Chess.Models
 {
     public class Game
     {
@@ -10,6 +12,8 @@
 
         public Player CurrentTurn { get; set; } = Player.White;
         public Player? Winner { get; set; } = null;
+
+        private MoveSimulator MoveSimulator = new MoveSimulator();
 
         public bool ErrorKingChecked = false;
 
@@ -25,7 +29,7 @@
             {
                 Console.WriteLine("King is chess!");
                 ErrorKingChecked = true;
-                bool chessmate = Board.IsKingChessmate(e.Item1);
+                bool chessmate = MoveSimulator.IsKingChessmate(e.Item1, this.Board);
                 if (chessmate)
                 {
                     Winner = (e.Item1 == Player.White) ? Player.Black : Player.White;

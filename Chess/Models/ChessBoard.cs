@@ -4,6 +4,7 @@ using System.Reflection;
 using Chess.Components.Pages;
 using Chess.logic;
 using Chess.Logic;
+using Force.DeepCloner;
 
 namespace Chess.Models
 {
@@ -118,56 +119,7 @@ namespace Chess.Models
             return true;
         }
 
-        private Dictionary<string, Cell> GetOccupantPlayerCells(Player player)
-        {
-            return BoardCells
-                .Where(kvp => kvp.Value.Occupant?.Owner == player)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
 
-
-        private bool MakeSimMoves(Player player)
-        {
-            var playerCells = GetOccupantPlayerCells(player);
-            ThreatTracker.IsSimulation = true;
-
-            foreach (var kvp in playerCells)
-            {
-                if (kvp.Value.Occupant == null) continue;
-
-                Cell cellStart = kvp.Value;
-
-                List<string> moves = MoveRegistry.Generators[cellStart.Occupant.Type]
-                    .GenerateMoves(kvp.Value, BoardCells, ThreatTracker);
-
-                foreach (string moveId in moves)
-                {
-                    BoardSnapshot simSnapshot = new BoardSnapshot(this);
-
-                    Selected = cellStart;
-                    Selected.IsSelected = true;
-
-                    bool isSafe = MakeMove(BoardCells[moveId]);
-
-                    simSnapshot.Restore(this);
-
-                    if (isSafe)
-                    {
-                        ThreatTracker.IsSimulation = false;
-                        ClearSelection();
-                        return false;
-                    }
-                }
-            }
-
-            ThreatTracker.IsSimulation = false;
-            return true; // No safe moves found, king is checkmate
-        }
-
-        public bool IsKingChessmate(Player player)
-        {
-            return MakeSimMoves(player);
-        }
 
         private void ClearSelection()
         {
