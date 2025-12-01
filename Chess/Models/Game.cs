@@ -25,6 +25,9 @@
             {
                 Console.WriteLine("King is chess!");
                 ErrorKingChecked = true;
+                bool chessmate = Board.IsKingChessmate(e.Item1);
+                if (chessmate) Console.WriteLine("Chessmate");
+
             };
         }
 

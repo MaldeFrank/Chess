@@ -9,12 +9,13 @@ namespace Chess.Models
         private Dictionary<int, Player> PieceColors = [];
 
         public event EventHandler<(Player, string)> KingCheckEvent;
+        public bool IsSimulation {get;set;} = false;
 
         public bool IskingChecked(Player player, string cell)
         {
             if (IsCellTargeted(cell, player))
             {
-                KingCheckEvent?.Invoke(this, (player, cell));
+                if (!IsSimulation) KingCheckEvent?.Invoke(this, (player, cell));
                 return true;
             }
             return false;
