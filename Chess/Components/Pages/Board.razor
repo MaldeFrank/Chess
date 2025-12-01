@@ -46,6 +46,22 @@
         </div>
     }
 
+    @if (game.Winner != null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal" tabindex="-1" style="display:block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-success">
+                <div class="modal-body text-center">
+                    <h2 class="fs-1">@game.Winner Wins!</h2>
+                    <p class="text-muted">The game is over.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
     <!-- Br�ttet -->
     <div id="chessboard"
         style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">

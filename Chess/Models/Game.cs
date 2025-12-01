@@ -26,7 +26,11 @@
                 Console.WriteLine("King is chess!");
                 ErrorKingChecked = true;
                 bool chessmate = Board.IsKingChessmate(e.Item1);
-                if (chessmate) Console.WriteLine("Chessmate");
+                if (chessmate)
+                {
+                    Winner = (e.Item1 == Player.White) ? Player.Black : Player.White;
+                    Console.WriteLine("Chessmate");
+                }
 
             };
         }
