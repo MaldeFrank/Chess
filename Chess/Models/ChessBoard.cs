@@ -88,10 +88,7 @@ namespace Chess.Models
         {
             if (Selected?.Occupant == null) return false; // Can it ever be null here?
             Piece movingPiece = Selected.Occupant;
-            Cell startCell = Selected;
-            Piece capturedPiece = targetCell.Occupant;
-            int oldCol = movingPiece.File;
-            int oldRow = movingPiece.Rank;
+            BoardSnapshot snapshot = new BoardSnapshot(this);
 
             HandleSpecialMoveLogic(movingPiece, targetCell);
 
@@ -111,14 +108,8 @@ namespace Chess.Models
 
             if (ThreatTracker.IskingChecked(owner, kingPos.Id))
             {
-                movingPiece.File = oldCol;
-                movingPiece.Rank = oldRow;
-                startCell.Occupant = movingPiece;
-
-                targetCell.Occupant = capturedPiece;
-
+                snapshot.Restore(this);
                 ThreatTracker.UpdateAllThreats(BoardCells);
-
                 return false;
             }
 
