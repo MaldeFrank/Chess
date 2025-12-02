@@ -7,14 +7,15 @@ namespace Chess.Models
     {
         private Dictionary<int, HashSet<string>> Threats = [];
         private Dictionary<int, Player> PieceColors = [];
-
         public event EventHandler<(Player, string)> KingCheckEvent;
         public bool IsSimulation {get;set;} = false;
 
-        public bool IskingChecked(Player player, string cell)
+        public bool IskingChecked(Player player, string cell, BoardSnapshot snapshot, ChessBoard board)
         {
             if (IsCellTargeted(cell, player))
             {
+                snapshot.Restore(board); //Restore board (King cant move there)
+                board.ThreatTracker.UpdateAllThreats(board.BoardCells);
                 if (!IsSimulation) KingCheckEvent?.Invoke(this, (player, cell));
                 return true;
             }

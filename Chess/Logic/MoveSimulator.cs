@@ -6,33 +6,33 @@ namespace Chess.Logic
 {
     public class MoveSimulator
     {
-        private Dictionary<string, Cell> GetOccupantPlayerCells(Player player, ChessBoard board)
+        private IEnumerable<string> GetOccupantPlayerCells(Player player, ChessBoard board)
         {
             return board.BoardCells
                 .Where(kvp => kvp.Value.Occupant?.Owner == player)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                .Select(kvp => kvp.Key);
         }
 
         private bool MakeSimMoves(Player player, ChessBoard board)
         {
             ChessBoard BoardClone = board.DeepClone();
-            var playerCells = GetOccupantPlayerCells(player, board);
+            var playerCellsIds = GetOccupantPlayerCells(player, BoardClone);
             BoardClone.ThreatTracker.IsSimulation = true;
 
-            foreach (var kvp in playerCells)
+            foreach (var cellId in playerCellsIds)
             {
-                if (kvp.Value.Occupant == null) continue;
-
-                Cell cellStart = kvp.Value;
+                if (!BoardClone.BoardCells.TryGetValue(cellId, out var cellStart) || cellStart.Occupant == null)
+                    continue;
 
                 List<string> moves = MoveRegistry.Generators[cellStart.Occupant.Type]
-                    .GenerateMoves(kvp.Value, BoardClone.BoardCells, BoardClone.ThreatTracker);
+                    .GenerateMoves(cellStart, BoardClone.BoardCells, BoardClone.ThreatTracker);
 
                 foreach (string moveId in moves)
                 {
                     BoardSnapshot simSnapshot = new BoardSnapshot(BoardClone);
 
-                    BoardClone.Selected = cellStart;
+                    BoardClone.Selected = BoardClone.BoardCells[cellId];
                     BoardClone.Selected.IsSelected = true;
 
                     bool isSafe = BoardClone.MakeMove(BoardClone.BoardCells[moveId]);

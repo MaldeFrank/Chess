@@ -108,10 +108,8 @@ namespace Chess.Models
             Player owner = movingPiece.Owner == Player.White ? Player.White : Player.Black;
             Cell kingPos = owner == Player.White ? WhiteKingPos : BlackKingPos;
 
-            if (ThreatTracker.IskingChecked(owner, kingPos.Id))
+            if (ThreatTracker.IskingChecked(owner, kingPos.Id, snapshot, this))
             {
-                snapshot.Restore(this);
-                ThreatTracker.UpdateAllThreats(BoardCells);
                 return false;
             }
 
