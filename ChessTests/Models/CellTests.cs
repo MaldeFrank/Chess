@@ -24,8 +24,11 @@ namespace Models.Tests
             var cell3 = new Cell("A8", "white", 0, 8);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => cell3.ValidatePosition());
 
-            var cell4 = new Cell("I9", "black", 10, 10);
+            var cell4 = new Cell("I9", "black", 10, -4);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => cell4.ValidatePosition());
+
+            var cell5 = new Cell("D5", "white", 3, -1);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => cell5.ValidatePosition());
         }
 
         [TestMethod]

@@ -20,7 +20,7 @@ namespace ChessTests.Models
             var piece2 = new Piece(PieceType.Rook, Player.Black, -1, 8);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => piece2.ValidatePosition());
 
-            var piece3 = new Piece(PieceType.Pawn, Player.White, 0, 12);
+            var piece3 = new Piece(PieceType.Pawn, Player.White, 0, -1);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => piece3.ValidatePosition());
         }
     }

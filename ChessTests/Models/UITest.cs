@@ -24,8 +24,8 @@ namespace ChessTests.Models
         public static void SetupAndStartGameTest(TestContext context)
         {
             _driver = new ChromeDriver(DriverDirectory);
-            _driver.Navigate().GoToUrl("https://localhost:7193/startgame");
-
+            _driver.Navigate().GoToUrl("https://localhost:7193/");
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
         [TestMethod]
@@ -33,23 +33,41 @@ namespace ChessTests.Models
         {
             // Indtast spiller-navne
             _driver.FindElement(By.Id("name1")).SendKeys("Alice");
+            var player1Color = new SelectElement(_driver.FindElement(By.Id("player1Color")));
+            player1Color.SelectByValue("lightblue");
+
             _driver.FindElement(By.Id("name2")).SendKeys("Bob");
+            var player2Color = new SelectElement(_driver.FindElement(By.Id("player2Color")));
+            player2Color.SelectByValue("maroon");
 
             // Start spillet
             _driver.FindElement(By.Id("beginGame")).Click();
 
-            // Vent lidt for navigation
-            Thread.Sleep(5000);
+            //// Vent lidt for navigation
+            Thread.Sleep(1500);
 
             // Bekræft at vi er på /board siden
             Assert.IsTrue(_driver.Url.Contains("/board"));
 
-
-            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            //WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
 
             _driver.FindElement(By.Id("a2")).Click();
 
             _driver.FindElement(By.Id("a3")).Click();
+
+            Thread.Sleep(500); // lille vent for UI
+
+            var a3 = _driver.FindElement(By.Id("a3"));
+            Assert.IsTrue(
+                a3.FindElements(By.TagName("span")).Count > 0,
+                "FEJL: Brikken står IKKE på a3 efter trækket!"
+            );
+
+            var a2 = _driver.FindElement(By.Id("a2"));
+            Assert.IsFalse(
+                a2.FindElements(By.TagName("span")).Count > 0,
+                "FEJL: Brikken står STADIG på a2!"
+            );
         }
     }
 }
