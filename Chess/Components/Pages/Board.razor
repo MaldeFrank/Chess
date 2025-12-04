@@ -1,25 +1,155 @@
 @page "/board"
-@rendermode InteractiveServer
+@using Chess.Logic
+@using Chess.logic
 @using Models
 @using System.Diagnostics
 @using System
+@using Microsoft.AspNetCore.Components
+@using Chess.Models
+@using System.Xml
+@using System.Buffers
+@using System.Dynamic
 
-<div id="chessboard" style="display:grid; grid-template-columns: repeat(8, 1fr); border: 2px solid black;">
-    @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
+
+<div class="container my-3">
+    <!-- Status -->
+    <div class="alert alert-info text-center">
+        @if (game.Winner != null)
+        {
+            <strong>Spillet er slut! Vinderen er: @(game.Winner == Player.White ? game.Player1.Name :
+                            game.Player2.Name)</strong>
+        }
+        else
+        {
+            <strong>Tur: @currentPlayer.Name (@currentPlayer.Color)</strong>
+        }
+    </div>
+
+    @if (game.ErrorKingChecked)
     {
-        <div @onclick="() => game.Board.SelectField(kvp.Key)" id="@kvp.Key" style="background-color:@kvp.Value.Color; height:@kvp.Value.Height; width:@kvp.Value.Width;
-                                border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
-                                background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
-                                display:flex; justify-content:center; align-items:center; font-size:48px;
-                                position:relative;">
-            @kvp.Value.Occupant?.UnicodeSymbol
-            <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
-                **@kvp.Key**
+        <div class="modal-backdrop fade show"></div>
+        <div class="modal" tabindex="-1" style="display:block;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-danger">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">⚠️ Check!</h5>
+                        <button type="button" class="btn-close" @onclick="DismissAlert"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p class="fs-4">The King is in check!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="DismissAlert">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     }
+
+    @if (game.Winner != null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal" tabindex="-1" style="display:block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-success">
+                
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">🏆 Checkmate!</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="DismissAlert"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <h2 class="fs-1">@game.Winner Wins!</h2>
+                    <p class="text-muted">The game is over.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <!-- Br�ttet -->
+    <div id="chessboard"
+        style="display:grid; grid-template-columns: repeat(8, 1fr); width: 1200px; height: 1200px; border: 2px solid black;">
+        @foreach (KeyValuePair<string, Cell> kvp in game.Board.BoardCells)
+        {
+            <div @onclick="() => OnCellClick(kvp.Key)" id="@kvp.Key" style="
+                                                                                    background-color:@(kvp.Value.IsHighlighted ? "lightgreen" : kvp.Value.Color);
+                                                                                    height:@kvp.Value.Height;
+                                                                                    width:@kvp.Value.Width;
+                                                                                    border:@(kvp.Value.IsSelected ? "3px solid lightblue" : "1px solid black");
+                                                                                    display:flex;
+                                                                                    justify-content:center;
+                                                                                    align-items:center;
+                                                                                    font-size:48px;
+                                                                                    position:relative;">
+
+                @if (kvp.Value.Occupant != null)
+                {
+                    var color = kvp.Value.Occupant.Owner == game.Player1.PlayerEnum ? game.Player1.Color : game.Player2.Color;
+                    <span style="color:@color; font-size:4rem; text-shadow:0px 0px 2px gray;">
+                        @kvp.Value.Occupant.UnicodeSymbol
+                    </span>
+                }
+
+                <!-- Feltets koordinat -->
+                <div style="position:absolute; top:2px; left:2px; font-size:30px; opacity:0.6;">
+                    @kvp.Key
+                </div>
+            </div>
+        }
+    </div>
+
 </div>
 
 @code {
+    private void DismissAlert()
+    {
+        game.ErrorKingChecked = false;
+        StateHasChanged();
+    }
+    [Parameter, SupplyParameterFromQuery] public string Player1Name { get; set; } = "Player 1";
+    [Parameter, SupplyParameterFromQuery] public string Player1Color { get; set; } = "white";
+    [Parameter, SupplyParameterFromQuery] public string Player2Name { get; set; } = "Player 2";
+    [Parameter, SupplyParameterFromQuery] public string Player2Color { get; set; } = "black";
+
     Chess.Models.Game game = new Chess.Models.Game();
+    GameLogic gameLogic;
+
+    private ChessPlayer currentPlayer => game.CurrentTurn == game.Player1.PlayerEnum ? game.Player1 : game.Player2;
+
+    protected override void OnParametersSet()
+    {
+        game.Player1.Name = Player1Name;
+        game.Player1.Color = Player1Color;
+        game.Player1.PlayerEnum = Player.White; // sikre kobling
+
+        game.Player2.Name = Player2Name;
+        game.Player2.Color = Player2Color;
+        game.Player2.PlayerEnum = Player.Black; // sikre kobling
+
+        gameLogic = new GameLogic(game);
+    }
+
+    private void OnCellClick(string cellId)
+    {
+        var cell = game.Board.BoardCells[cellId];
+        game.ErrorKingChecked = false; //Resets
+        if (cell.IsHighlighted && game.Board.Selected != null)
+        {
+            bool moveMade = gameLogic.BoardLogic.MakeMove(cell);
+
+            if (moveMade)
+            {
+                gameLogic.NextTurn();
+            }
+            gameLogic.CheckWinner();
+        }
+        else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
+        {
+            gameLogic.BoardLogic.SelectField(cellId);
+        }
+
+        StateHasChanged();
+    }
 }

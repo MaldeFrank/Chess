@@ -1,7 +1,86 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
+@using Pages
+@using System.Diagnostics
+@using System
+@using Microsoft.AspNetCore.Components
+
+
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to The Ultimate Chess Game!</h1>
 
-Welcome to your new app.
+<div class="player-setup">
+    <h2>Player 1</h2>
+    <p>Please enter the name of player 1:</p>
+    <input type="text" id="name1" @bind="player1.Name" placeholder="Player 1 name" />
+
+    <p>Please select the color for player 1:</p>
+    <select id="player1Color" @bind="player1.Color">
+        <option value="white">White</option>
+        <option value="lightcoral">Light coral</option>
+        <option value="lightblue">Light blue</option>
+        <option value="lightgreen">Light green</option>
+    </select>
+</div>
+
+<br>
+
+<div class="player-setup">
+    <h2>Player 2</h2>
+    <p>Please enter the name of player 2:</p>
+    <input type="text" id="name2" @bind="player2.Name" placeholder="Player 2 name" />
+
+    <p>Please select the color for player 2:</p>
+    <select id="player2Color" @bind="player2.Color">
+        <option selected="selected" value="black">Black</option>
+        <option value="maroon">Maroon</option>
+        <option value="darkblue">Dark blue</option>
+        <option value="darkgreen">Dark green</option>
+    </select>
+</div>
+
+<br>
+
+<button id="beginGame" @onclick="BeginGame">Start Game</button>
+
+@if (ErrorMessage is not null)
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+@code {
+
+    Chess.Models.ChessPlayer player1 = new Chess.Models.ChessPlayer();
+    Chess.Models.ChessPlayer player2 = new Chess.Models.ChessPlayer();
+
+    protected override void OnInitialized()
+    {
+        player1.Color = "white";
+        player2.Color = "black";
+    }
+    private string? ErrorMessage { get; set; }
+    private bool GameStarted { get; set; } = false;
+
+    private void BeginGame()
+    {
+        if (string.IsNullOrWhiteSpace(player1.Name) || string.IsNullOrWhiteSpace(player2.Name))
+        {
+            ErrorMessage = "Please enter names for both players.";
+            GameStarted = false;
+            Console.WriteLine("Error: " + ErrorMessage);
+            return;
+        }
+
+        ErrorMessage = null;
+        GameStarted = true;
+
+        // Navigate to the board page with player info in query string
+        var url = $"/board?player1Name={Uri.EscapeDataString(player1.Name)}&player1Color={Uri.EscapeDataString(player1.Color)}" +
+                $"&player2Name={Uri.EscapeDataString(player2.Name)}&player2Color={Uri.EscapeDataString(player2.Color)}";
+
+        Navigation.NavigateTo(url);
+
+    }
+}

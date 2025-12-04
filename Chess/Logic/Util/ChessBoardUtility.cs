@@ -39,6 +39,13 @@ namespace Chess.Logic
             return coords;
         }
 
+        public static Cell FindCellFromCoords((int, int) cellCoords, Dictionary<string, Cell> cellIds)
+        {
+            String id = ToCellId([cellCoords])[0];
+            return cellIds[id];
+        }
+
+        
         /// <summary>
         ///  Converts a list of tuples (row, column) to cellids like "a1", "h8"
         /// </summary>

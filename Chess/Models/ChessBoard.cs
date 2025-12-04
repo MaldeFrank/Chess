@@ -1,6 +1,6 @@
 
 
-using Chess.logic;
+using Chess.Logic;
 
 namespace Chess.Models
 {
@@ -9,7 +9,11 @@ namespace Chess.Models
         public List<string> PossibleMoves = new List<string>();
         public Dictionary<string, Cell> BoardCells { get; set; } = new();
         public Cell? Selected { get; set; }
-
+        public ThreatTracker ThreatTracker = new ThreatTracker();
+        public Cell WhiteKingPos;
+        public Cell BlackKingPos;
+        
+        
         public string[] CellIds { get; set; } = [
         "a1", "a2", "a3", "a4", "a5", "a6", "a7", "a8",
         "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8",
@@ -40,63 +44,17 @@ namespace Chess.Models
 
         }
 
+
         public void PlacePiece(Piece piece)
         {
             string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
             if (BoardCells.ContainsKey(cellId))
             {
                 BoardCells[cellId].Occupant = piece;
+                if (piece.Id == 13) { WhiteKingPos = BoardCells[cellId]; }
+                if (piece.Id == 29) { BlackKingPos = BoardCells[cellId]; }
             }
         }
-
-        public void SelectField(string selected)
-        {
-            //Highligts the selected field
-            if (Selected != null) { Selected.IsSelected = false; }
-            Selected = BoardCells[selected];
-            Selected.IsSelected = true;
-
-            //Highligts the possible move choices
-            if (PossibleMoves.Count > 0) { PossibleMoves.ForEach((id) => BoardCells[id].IsHighlighted = false); } // Resets the possible moves
-
-            Piece piece = Selected.Occupant;
-            PossibleMoves = MoveRegistry.Generators[piece.Type].GenerateMoves(Selected, BoardCells); // Sets the new possible moves
-
-            PossibleMoves.ForEach((id =>
-            {
-                BoardCells[id].IsHighlighted = true;
-            }));
-        }
-
-
-        public void ValidateBoardCells()
-        {
-            foreach (var kvp in BoardCells)
-            {
-                var cell = kvp.Value;
-                if (cell.Row < 0 || cell.Row > 8 || cell.Col < 0 || cell.Col > 8)
-                    throw new ArgumentOutOfRangeException($"Cell {cell.Id} has invalid row or col");
-            }
-        }
-
-
-        public void ValidatePiecePlacement(Piece piece)
-        {
-            if (piece.File < 0 || piece.File > 7 || piece.Rank < 0 || piece.Rank > 7)
-                throw new ArgumentOutOfRangeException("Piece has invalid File or Rank");
-        }
-
-        public void Validate()
-        {
-            ValidateBoardCells();
-            foreach (var cell in BoardCells.Values)
-            {
-                if (cell.Occupant != null)
-                    ValidatePiecePlacement(cell.Occupant);
-            }
-        }
-
-
 
     }
 }

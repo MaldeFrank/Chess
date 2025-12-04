@@ -1,4 +1,4 @@
-﻿
+﻿using Chess.Logic;
 
 namespace Chess.Models
 {
@@ -7,87 +7,67 @@ namespace Chess.Models
         public ChessBoard Board { get; set; } = new ChessBoard();
         public List<Piece> Pieces { get; set; } = new List<Piece>();
 
+        public ChessPlayer Player1 { get; set; } = new ChessPlayer();
+        public ChessPlayer Player2 { get; set; } = new ChessPlayer();
+
+        public Player CurrentTurn { get; set; } = Player.White;
+        public Player? Winner { get; set; } = null;
+
+        public bool ErrorKingChecked = false;
+
+
         public Game()
         {
+            // Sæt enum kobling
+            Player1.PlayerEnum = Player.White;
+            Player2.PlayerEnum = Player.Black;
+
             InitializePieces();
             PlacePiecesOnBoard();
         }
 
         private void InitializePieces()
         {
+            int idWhite = 0;
             // White pieces (rank 0 & 1)
             for (int file = 0; file < 8; file++)
             {
-                Pieces.Add(new Piece(PieceType.Pawn, Player.White, file, 1));
+                idWhite++;
+                Pieces.Add(new Piece(PieceType.Pawn, Player.White, file, 1, idWhite));
             }
-            Pieces.Add(new Piece(PieceType.Rook, Player.White, 0, 0));
-            Pieces.Add(new Piece(PieceType.Knight, Player.White, 1, 0));
-            Pieces.Add(new Piece(PieceType.Bishop, Player.White, 2, 0));
-            Pieces.Add(new Piece(PieceType.Queen, Player.White, 3, 0));
-            Pieces.Add(new Piece(PieceType.King, Player.White, 4, 0));
-            Pieces.Add(new Piece(PieceType.Bishop, Player.White, 5, 0));
-            Pieces.Add(new Piece(PieceType.Knight, Player.White, 6, 0));
-            Pieces.Add(new Piece(PieceType.Rook, Player.White, 7, 0));
+            Pieces.Add(new Piece(PieceType.Rook, Player.White, 0, 0, 9));
+            Pieces.Add(new Piece(PieceType.Knight, Player.White, 1, 0, 10));
+            Pieces.Add(new Piece(PieceType.Bishop, Player.White, 2, 0, 11));
+            Pieces.Add(new Piece(PieceType.Queen, Player.White, 3, 0, 12));
+            Pieces.Add(new Piece(PieceType.King, Player.White, 4, 0, 13));
+            Pieces.Add(new Piece(PieceType.Bishop, Player.White, 5, 0, 14));
+            Pieces.Add(new Piece(PieceType.Knight, Player.White, 6, 0, 15));
+            Pieces.Add(new Piece(PieceType.Rook, Player.White, 7, 0, 16));
 
+            int idBlack = 16;
             // Black pieces (rank 6 & 7)
             for (int file = 0; file < 8; file++)
             {
-                Pieces.Add(new Piece(PieceType.Pawn, Player.Black, file, 6));
+                idBlack++;
+                Pieces.Add(new Piece(PieceType.Pawn, Player.Black, file, 6, idBlack));
             }
-            Pieces.Add(new Piece(PieceType.Rook, Player.Black, 0, 7));
-            Pieces.Add(new Piece(PieceType.Knight, Player.Black, 1, 7));
-            Pieces.Add(new Piece(PieceType.Bishop, Player.Black, 2, 7));
-            Pieces.Add(new Piece(PieceType.Queen, Player.Black, 3, 7));
-            Pieces.Add(new Piece(PieceType.King, Player.Black, 4, 7));
-            Pieces.Add(new Piece(PieceType.Bishop, Player.Black, 5, 7));
-            Pieces.Add(new Piece(PieceType.Knight, Player.Black, 6, 7));
-            Pieces.Add(new Piece(PieceType.Rook, Player.Black, 7, 7));
+            Pieces.Add(new Piece(PieceType.Rook, Player.Black, 0, 7, 25));
+            Pieces.Add(new Piece(PieceType.Knight, Player.Black, 1, 7, 26));
+            Pieces.Add(new Piece(PieceType.Bishop, Player.Black, 2, 7, 27));
+            Pieces.Add(new Piece(PieceType.Queen, Player.Black, 3, 7, 28));
+            Pieces.Add(new Piece(PieceType.King, Player.Black, 4, 7, 29));
+            Pieces.Add(new Piece(PieceType.Bishop, Player.Black, 5, 7, 30));
+            Pieces.Add(new Piece(PieceType.Knight, Player.Black, 6, 7, 31));
+            Pieces.Add(new Piece(PieceType.Rook, Player.Black, 7, 7, 32));
         }
 
         private void PlacePiecesOnBoard()
         {
-            foreach (var piece in Pieces)
+            foreach (Piece piece in Pieces)
             {
                 Board.PlacePiece(piece);
             }
         }
 
-        public void ValidatePieces()
-        {
-            var occupied = new HashSet<string>();
-
-            foreach (var piece in Pieces)
-            {
-                piece.ValidatePosition();
-
-                string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
-
-                if (occupied.Contains(cellId))
-                    throw new InvalidOperationException($"Duplicate piece on cell {cellId}");
-
-                occupied.Add(cellId);
-
-                if (!Board.BoardCells.ContainsKey(cellId))
-                    throw new InvalidOperationException($"Piece {piece.Type} at {cellId} is outside the board");
-            }
-        }
-
-        public void ValidateBoardPlacement()
-        {
-            foreach (var piece in Pieces)
-            {
-                string cellId = $"{(char)('a' + piece.File)}{piece.Rank + 1}";
-                var cell = Board.BoardCells[cellId];
-
-                if (cell.Occupant != piece)
-                    throw new InvalidOperationException($"Piece {piece.Type} not correctly placed on board at {cellId}");
-            }
-        }
-
-        public void Validate()
-        {
-            ValidatePieces();
-            ValidateBoardPlacement();
-        }
     }
 }

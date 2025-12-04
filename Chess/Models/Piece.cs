@@ -7,19 +7,23 @@ namespace Chess.Models
 
     public class Piece
     {
+        public int Id {get;}
         public PieceType Type { get; set; }
         public Player Owner { get; set; }
         public int File { get; set; }
         public int Rank { get; set; }
         public bool IsCaptured { get; set; }
+        public int Moves {get;set;}
 
-        public Piece(PieceType type, Player owner, int file, int rank)
+        public Piece(PieceType type, Player owner, int file, int rank, int id)
         {
             Type = type;
             Owner = owner;
             File = file;
             Rank = rank;
             IsCaptured = false;
+            Moves = 0;
+            Id = id;
         }
 
         // Unicode symbols for chess pieces
