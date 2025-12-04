@@ -114,6 +114,7 @@
     [Parameter, SupplyParameterFromQuery] public string Player2Color { get; set; } = "black";
 
     Chess.Models.Game game = new Chess.Models.Game();
+    GameLogic gameLogic;
 
     private ChessPlayer currentPlayer => game.CurrentTurn == game.Player1.PlayerEnum ? game.Player1 : game.Player2;
 
@@ -126,6 +127,8 @@
         game.Player2.Name = Player2Name;
         game.Player2.Color = Player2Color;
         game.Player2.PlayerEnum = Player.Black; // sikre kobling
+
+        gameLogic = new GameLogic(game);
     }
 
     private void OnCellClick(string cellId)
@@ -134,17 +137,17 @@
         game.ErrorKingChecked = false; //Resets
         if (cell.IsHighlighted && game.Board.Selected != null)
         {
-            bool moveMade = game.Board.MakeMove(cell);
+            bool moveMade = gameLogic.BoardLogic.MakeMove(cell);
 
             if (moveMade)
             {
-                game.NextTurn();
+                gameLogic.NextTurn();
             }
-            game.CheckWinner();
+            gameLogic.CheckWinner();
         }
         else if (cell.Occupant != null && cell.Occupant.Owner == currentPlayer.PlayerEnum)
         {
-            game.Board.SelectField(cellId);
+            gameLogic.BoardLogic.SelectField(cellId);
         }
 
         StateHasChanged();

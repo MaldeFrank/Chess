@@ -1,6 +1,6 @@
 using Force.DeepCloner;
-using Chess.logic;
 using Chess.Models;
+using Chess.logic;
 
 namespace Chess.Logic
 {
@@ -17,6 +17,9 @@ namespace Chess.Logic
         private bool MakeSimMoves(Player player, ChessBoard board)
         {
             ChessBoard BoardClone = board.DeepClone();
+            
+            BoardLogic simLogic = new BoardLogic(BoardClone);
+
             var playerCellsIds = GetOccupantPlayerCells(player, BoardClone);
             BoardClone.ThreatTracker.IsSimulation = true;
 
@@ -35,7 +38,7 @@ namespace Chess.Logic
                     BoardClone.Selected = BoardClone.BoardCells[cellId];
                     BoardClone.Selected.IsSelected = true;
 
-                    bool isSafe = BoardClone.MakeMove(BoardClone.BoardCells[moveId]);
+                    bool isSafe = simLogic.MakeMove(BoardClone.BoardCells[moveId]);
 
                     simSnapshot.Restore(BoardClone);
                     BoardClone.ThreatTracker.UpdateAllThreats(BoardClone.BoardCells);

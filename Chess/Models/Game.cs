@@ -13,9 +13,8 @@ namespace Chess.Models
         public Player CurrentTurn { get; set; } = Player.White;
         public Player? Winner { get; set; } = null;
 
-        private MoveSimulator MoveSimulator = new MoveSimulator();
-
         public bool ErrorKingChecked = false;
+
 
         public Game()
         {
@@ -25,18 +24,6 @@ namespace Chess.Models
 
             InitializePieces();
             PlacePiecesOnBoard();
-            Board.ThreatTracker.KingCheckEvent += (sender, e) =>
-            {
-                Console.WriteLine("King is chess!");
-                ErrorKingChecked = true;
-                bool chessmate = MoveSimulator.IsKingChessmate(e.Item1, this.Board);
-                if (chessmate)
-                {
-                    Winner = (e.Item1 == Player.White) ? Player.Black : Player.White;
-                    Console.WriteLine("Chessmate");
-                }
-
-            };
         }
 
         private void InitializePieces()
@@ -82,19 +69,5 @@ namespace Chess.Models
             }
         }
 
-        public void NextTurn()
-        {
-            if (Winner != null) return; // Spillet er slut
-            CurrentTurn = CurrentTurn == Player.White ? Player.Black : Player.White;
-        }
-
-        public void CheckWinner()
-        {
-            var whiteKingAlive = Pieces.Any(p => p.Type == PieceType.King && p.Owner == Player.White && !p.IsCaptured);
-            var blackKingAlive = Pieces.Any(p => p.Type == PieceType.King && p.Owner == Player.Black && !p.IsCaptured);
-
-            if (!whiteKingAlive) Winner = Player.Black;
-            if (!blackKingAlive) Winner = Player.White;
-        }
     }
 }

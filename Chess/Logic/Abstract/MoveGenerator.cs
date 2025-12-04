@@ -31,7 +31,7 @@ namespace Chess.Logic.Abstract
             return ChessBoardUtility.ToCellId(baseMoves);
         }
 
-        protected void HandleCollision(int row, int col, List<(int, int)> occupiedCells, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
+        protected void HandleCollision(int row, int col, List<(int, int)> moves, Cell cell, Dictionary<string, Cell> cellIds)
         {
             (int, int) potentialMove = (row, col);
 
@@ -42,10 +42,6 @@ namespace Chess.Logic.Abstract
             }
         }
 
-        protected virtual bool ShouldStopMove(int row, int col, Cell cell, List<(int, int)> moves)
-        {
-            return false;
-        }
 
         /// <summary>
         /// Calculates moves in given direction specified by row and column movement/direction.
@@ -68,12 +64,11 @@ namespace Chess.Logic.Abstract
 
             while (r >= 1 && r <= 8 && c >= 1 && c <= 8 && steps < maxSteps)
             {
-                if (ShouldStopMove(r, c, cell, moves) == true) { break; }
 
                 if (occupiedCells.Contains((r, c))) //collision
                 {
                     collision = true;
-                    HandleCollision(r, c, occupiedCells, moves, cell, cellIds);
+                    HandleCollision(r, c, moves, cell, cellIds);
                     break;
                 }
                 moves.Add((r, c));
