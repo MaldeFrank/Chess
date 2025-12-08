@@ -14,13 +14,13 @@ namespace ChessTests.Models
         [TestMethod]
         public void PositionTest()
         {
-            var piece = new Piece(PieceType.Knight, Player.White, 0, 7);
+            var piece = new Piece(PieceType.Knight, Player.White, 0, 7, 4);
             piece.ValidatePosition();
 
-            var piece2 = new Piece(PieceType.Rook, Player.Black, -1, 8);
+            var piece2 = new Piece(PieceType.Rook, Player.Black, -1, 8, 5);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => piece2.ValidatePosition());
 
-            var piece3 = new Piece(PieceType.Pawn, Player.White, 0, -1);
+            var piece3 = new Piece(PieceType.Pawn, Player.White, 0, -1, 6);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => piece3.ValidatePosition());
         }
     }

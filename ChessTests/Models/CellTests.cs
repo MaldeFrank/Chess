@@ -35,12 +35,12 @@ namespace Models.Tests
         public void ValidateOccupantTest()
         {
             // Gyldig occupant
-            var piece = new Piece(PieceType.Pawn, Player.White, 1, 2);
+            var piece = new Piece(PieceType.Pawn, Player.White, 1, 2, 1);
             var cell = new Cell("B3", "white", 1, 2) { Occupant = piece };
             cell.ValidateOccupant();
 
             // Ugyldig occupant
-            var piece2 = new Piece(PieceType.Rook, Player.Black, 0, 0);
+            var piece2 = new Piece(PieceType.Rook, Player.Black, 0, 2, 2);
             var cell2 = new Cell("A1", "black", 1, 1) { Occupant = piece2 };
             Assert.ThrowsException<InvalidOperationException>(() => cell2.ValidateOccupant());
         }
@@ -48,14 +48,14 @@ namespace Models.Tests
         [TestMethod]
         public void ValidateTest()
         {
-            var piece = new Piece(PieceType.Rook, Player.White, 0, 0);
+            var piece = new Piece(PieceType.Rook, Player.White, 0, 0, 3);
             var cell = new Cell("A1", "white", 0, 0) { Occupant = piece };
             cell.Validate();
 
             var cell2 = new Cell("A9", "white", 0, 9);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => cell2.Validate());
 
-            var piece2 = new Piece(PieceType.Knight, Player.Black, 1, 1);
+            var piece2 = new Piece(PieceType.Knight, Player.Black, 1, 1, 4);
             var cell3 = new Cell("A1", "black", 0, 0) { Occupant = piece2 };
             Assert.ThrowsException<InvalidOperationException>(() => cell3.Validate());
         }

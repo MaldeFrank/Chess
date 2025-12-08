@@ -61,7 +61,7 @@
             },
             "MSTest": {
               "target": "Package",
-              "version": "[4.0.2, )"
+              "version": "[3.11.1, )"
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
